@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 gem "middleman", "~>3.3.7"
 
-gem 'middleman-gh-pages'
+gem 'middleman-gh-pages', github: 'tarebyte/middleman-gh-pages', branch: 'github_user_pages'
 
 # Live-reloading plugin
 gem "middleman-livereload", "~> 3.1.0"

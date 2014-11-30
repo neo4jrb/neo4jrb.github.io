@@ -1,3 +1,11 @@
+GIT
+  remote: git://github.com/tarebyte/middleman-gh-pages.git
+  revision: 4c5a578e79a1f8bf4e909169cc0948d6bb2d5304
+  branch: github_user_pages
+  specs:
+    middleman-gh-pages (0.0.3)
+      rake (> 0.9.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -70,8 +78,6 @@ GEM
       rack-test (~> 0.6.2)
       thor (>= 0.15.2, < 2.0)
       tilt (~> 1.4.1, < 2.0)
-    middleman-gh-pages (0.0.3)
-      rake (> 0.9.3)
     middleman-livereload (3.1.1)
       em-websocket (>= 0.2.0)
       middleman-core (>= 3.0.2)
@@ -132,7 +138,7 @@ PLATFORMS
 DEPENDENCIES
   coffee-script
   middleman (~> 3.3.7)
-  middleman-gh-pages
+  middleman-gh-pages!
   middleman-livereload (~> 3.1.0)
   sass
   slim

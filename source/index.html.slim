@@ -41,13 +41,46 @@ title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
           | If you like to read, check out our wiki's 
           = link_to 'setup page', 'https://github.com/neo4jrb/neo4j/wiki/Neo4j-v3-Setup'
 
+    #getting-involved.panel
+      .panel-heading
+        h3 Getting involved
+      .panel-body
+        p
+          | Like any open source project we happily welcome:
+          ul
+            li = link_to 'New issues', 'https://github.com/neo4jrb/neo4j/issues/new'
+            li Pull requests
+            li Documentation
+
+        p
+          | You can also join us on our 
+          = link_to 'mailing list', 'https://groups.google.com/forum/#!forum/neo4jrb'
+
 
   #sidebar.col-xs-3
     .panel
-      .panel-heading
-        h3 Sidebar
       .panel-body
         p = link_to 'Getting started', '#getting-started'
+        p = link_to 'Getting involved', '#getting-involved'
+
+    .panel
+      .panel-body
+        | The primary maintainers of neo4j.rb are:
+        p
+          = link_to 'http://subvertallmedia.com/' do
+            .media
+              .media-left
+                = image_tag 'https://avatars.githubusercontent.com/subvertallchris', style: 'width: 30px'
+              .media-body
+                p = link_to 'subvertallchris', 'https://github.com/subvertallchris/'
+
+        p 
+          = link_to 'http://brian-underwood.codes/' do
+            .media
+              .media-left
+                = image_tag 'https://avatars.githubusercontent.com/cheerfulstoic', style: 'width: 30px'
+              .media-body
+                p = link_to 'cheerfulstoic', 'https://github.com/cheerfulstoic/'
 
 
     script data-gratipay-username="cheerfulstoic" src="//grtp.co/v1.js"

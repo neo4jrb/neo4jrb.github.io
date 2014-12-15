@@ -1,7 +1,7 @@
 GIT
-  remote: git://github.com/tarebyte/middleman-gh-pages.git
-  revision: 4c5a578e79a1f8bf4e909169cc0948d6bb2d5304
-  branch: github_user_pages
+  remote: git://github.com/elthariel/middleman-gh-pages.git
+  revision: 7f70eaa27ff670f668b423620c14d19f059c7768
+  branch: master
   specs:
     middleman-gh-pages (0.0.3)
       rake (> 0.9.3)
@@ -101,7 +101,7 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    rake (10.4.0)
+    rake (10.4.2)
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
       ffi (>= 0.5.0)

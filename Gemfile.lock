@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/cyril-sf/middleman-gh-pages.git
+  remote: git://github.com/neo4jrb/middleman-gh-pages.git
   revision: 777064529ae16c49c0a523e7b7729ed49173dfdd
   branch: gh-user-page
   specs:

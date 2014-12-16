@@ -6719,29 +6719,37 @@ button.close {
   /* line 18, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/bootstrap/mixins/_responsive-visibility.scss */
   .hidden-print {
     display: none !important; } }
-/* line 9, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 11, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 body {
   background-color: #718DA5;
   color: #123552; }
 
-/* line 14, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 16, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 #main {
   min-width: 900px; }
 
-/* line 18, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 20, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 #sidebar {
   text-align: center; }
 
-/* line 22, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 24, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 .jumbotron {
   background: transparent;
   color: #042037; }
 
-/* line 27, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 29, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 .panel {
   border: 1px solid #123552;
   border-radius: 1em; }
-  /* line 31, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 33, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
   .panel .panel-heading {
     border-bottom: 1px solid #123552;
+    padding-bottom: 0.5em; }
+
+/* line 39, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+.article-teaser {
+  border-radius: 1em; }
+  /* line 42, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  .article-teaser .title {
+    font-size: 1.25em;
     padding-bottom: 0.5em; }

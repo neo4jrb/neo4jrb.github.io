@@ -1,0 +1,22 @@
+---
+title: New Site
+date: 2014-12-16 22:01:58 UTC
+poster: Chris
+summary: New site! So exciting!
+---
+
+#content.col-xs-9
+  .panel
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        With the release of the Neo4j.rb v4 right around the corner, it seemed like a good time to finally put together a proper site for the gem and the Neo4jrb project as a whole. We hope to use this space as a resource for news updates, documentation, and general tips related to the Neo4j Ruby community.
+
+        Since we're a little light on content, what should you look at in the meantime? Well, you could try...
+
+        * [The gem changelog](https://github.com/neo4jrb/neo4j/blob/master/CHANGELOG)
+        * [The detailed Neo4j gem v4 notes](https://github.com/neo4jrb/neo4j/wiki/Neo4j.rb-v4-Introduction)
+        * [The new meta-model project](https://github.com/neo4jrb/meta_model)
+    .panel-footer
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}

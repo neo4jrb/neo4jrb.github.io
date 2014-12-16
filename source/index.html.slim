@@ -32,7 +32,7 @@ title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
         - else
           - blog.articles[0...5].each do |article|
             .article-teaser
-              .title #{link_to article.title, article} (#{article.date.strftime("%Y/%M/%d")})
+              .title #{link_to article.title, article} (#{article.date.strftime("%Y/%m/%d")})
               .body
                 = article.data.summary
 

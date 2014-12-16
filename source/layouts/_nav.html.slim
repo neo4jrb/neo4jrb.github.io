@@ -1,11 +1,15 @@
 #sidebar.col-xs-3
   .panel
     .panel-body
-      p = link_to 'Home', '/index.html', relative: true
-      p = link_to 'News and Blog', '/index.html#latest-news', relative: true
-      p = link_to 'Latest Documentation', 'https://github.com/neo4jrb/neo4j/wiki'
-      p = link_to 'Getting started', '/index.html#getting-started', relative: true
-      p = link_to 'Getting involved', '/index.html#getting-involved', relative: true
+      - [ \
+          { title: 'Home',              path: '/index.html', relative: true },\
+          { title: 'News and Blog',     path: '/index.html#latest-news', relative: true },\
+          { title: 'Latest Documentation', path: 'https://github.com/neo4jrb/neo4j/wiki', relative: false },\
+          { title: 'Getting started',   path: '/index.html#getting-started', relative: true },\
+          { title: 'Getting involved',  path: '/index.html#getting-involved', relative: true },\
+          { title: 'Getting help',      path: '/index.html#getting-help', relative: true}\
+        ].each do |link|
+          p = link_to link[:title], link[:path], relative: link[:relative]
 
   .panel
     .panel-body

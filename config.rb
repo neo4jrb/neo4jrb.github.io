@@ -47,11 +47,25 @@
 #   end
 # end
 
+Slim::Engine.set_options({ tabsize: 2 })
+
 set :css_dir, 'stylesheets'
 
 set :js_dir, 'javascripts'
 
 set :images_dir, 'images'
+
+activate :blog do |blog|
+  blog.layout = 'layouts/blog_layout.html'
+  blog.new_article_template = 'source/layouts/blog_template.html.erb'
+  blog.calendar_template = 'blog/calendar.html'
+  blog.tag_template = 'blog/tag.html'
+  blog.prefix = 'blog'
+  blog.default_extension = ".slim"
+end
+
+set :markdown_engine, :redcarpet
+set :markdown, :fenced_code_blocks => true
 
 # Build-specific configuration
 configure :build do

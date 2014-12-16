@@ -5,6 +5,8 @@ $color1: #718DA5;
 $color2: #496C89;
 $color3: #123552;
 $color4: #042037;
+$default-padding: 0.5em;
+$default-border: 1px solid $color3;
 
 body {
   background-color: $color1;
@@ -25,11 +27,20 @@ body {
 }
 
 .panel {
-  border: 1px solid $color3;
+  border: $default-border;
   border-radius: 1em;
 
   .panel-heading {
-    border-bottom: 1px solid $color3;
-    padding-bottom: 0.5em;
+    border-bottom: $default-border;
+    padding-bottom: $default-padding;
+  }
+}
+
+.article-teaser {
+  border-radius: 1em;
+
+  .title {
+    font-size: 1.25em;
+    padding-bottom: $default-padding;
   }
 }

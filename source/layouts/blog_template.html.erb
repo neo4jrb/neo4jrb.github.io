@@ -1,0 +1,15 @@
+---
+title:  <%= @title.titleize %>
+date: <%= @date %>
+poster: Neo4jrb Team
+---
+
+#content.col-xs-9
+  .panel
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        Post body here
+    .panel-footer
+      | Posted #{current_article.date.strftime("%Y/%M/%d")} by #{current_page.data.poster}

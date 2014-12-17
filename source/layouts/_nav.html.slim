@@ -13,6 +13,18 @@
 
   .panel
     .panel-body
+      p
+        .git-stats
+        .latest-release
+        br
+        = link_to image_tag('https://travis-ci.org/neo4jrb/neo4j.svg?branch=master'), 'https://travis-ci.org/neo4jrb/neo4j'
+        | &nbsp;
+        = link_to image_tag('https://coveralls.io/repos/neo4jrb/neo4j/badge.png?branch=master'), 'https://coveralls.io/r/neo4jrb/neo4j?branch=master'
+        | &nbsp;
+        = link_to image_tag('https://codeclimate.com/github/neo4jrb/neo4j/badges/gpa.svg'), 'https://codeclimate.com/github/neo4jrb/neo4j'
+
+  .panel
+    .panel-body
       | The primary maintainers of neo4j.rb are:
       p
         = link_to 'http://blog.subvertallmedia.com/' do

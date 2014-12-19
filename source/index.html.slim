@@ -7,21 +7,23 @@ title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
       .panel-heading
         h3 What is Neo4j.rb?
       .panel-body
-        p Neo4j.rb (neo4j gem) is a Ruby wrapper for the Neo4j graph database.  It is a “Drop in” replacement for Rails Active Record.
-        p Top Features
-        ul
-          li
-            | Object Model interface for Nodes and Relationships including:
-            ul
-              li Properties
-              li Indexes / Constraints
-              li Callbacks
-              li Validation
-              li Assocations
-          li
-            | Query building / chaining interface similar to #{link_to "arel", "https://github.com/rails/arel"}
+        p
+          | Neo4j.rb (neo4j gem) is a #{link_to 'Ruby', 'https://www.ruby-lang.org/en/'} Object-Graph-Mapper (OGM) for the #{link_to 'Neo4j', 'http://neo4j.com'} graph database. It tries to follow API conventions established by #{link_to 'ActiveRecord', 'http://guides.rubyonrails.org/active_record_basics.html'} and familiar to most Ruby developers but with a Neo4j flavor.
+        p
+          | If you're already familiar with ActiveRecord, DataMapper, or Mongoid, you'll find the Object Model features you've come to expect from an O*M:
+          ul
+            li Properties
+            li Indexes / Constraints
+            li Callbacks
+            li Validation
+            li Assocations
+          | Because relationships are first-class citizens in Neo4j, models can be created for both nodes and relationships.
+        p
+          | Some additional features include:
+          li A chainable #{link_to "arel", "https://github.com/rails/arel"}-inspired query builder
           li Transactions
-          li Migrations
+          li Migration framework
+        strong Neo4j.rb supports Ruby 1.9.3+ MRI and JRuby.
 
     #latest-news.panel
       .panel-heading
@@ -41,10 +43,16 @@ title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
         h3 Getting started
       .panel-body
         p
-          | If you're the sort who likes to watch a video, check out our intro #{link_to 'screencast', 'https://www.youtube.com/watch?v=bDjbqRL9HcM'}
-
+          | If you're the sort who likes to watch a video, check out our intro #{link_to 'screencast', 'https://www.youtube.com/watch?v=bDjbqRL9HcM'}.
+          br
+          | If you like to read, check out our wiki's #{link_to 'setup page', 'https://github.com/neo4jrb/neo4j/wiki/Neo4j-v3-Setup'}.
         p
-          | If you like to read, check out our wiki's #{link_to 'setup page', 'https://github.com/neo4jrb/neo4j/wiki/Neo4j-v3-Setup'}
+          | New to Ruby? #{link_to 'Try Ruby in your browser!', 'http://tryruby.org/levels/1/challenges/0'}
+        p
+          | Installation resources:
+          ul
+            li Mac: #{link_to 'Getting started', 'http://railsapps.github.io/installrubyonrails-mac.html'}
+            li Windows: #{link_to 'Rails installer', 'http://railsinstaller.org/en'}
 
     #getting-involved.panel
       .panel-heading

@@ -6753,3 +6753,7 @@ body {
   .article-teaser .title {
     font-size: 1.25em;
     padding-bottom: 0.5em; }
+
+/* line 48, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+.build-info {
+  padding-bottom: 0.5em; }

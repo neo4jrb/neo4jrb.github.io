@@ -5,15 +5,18 @@ html
     /! Always force latest IE rendering engine or request Chrome Frame
     meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /
     /! Use title if it's in the page YAML frontmatter
-    title = current_page.data.title || "The Middleman"
+		meta name="viewport" content="width=device-width, initial-scale=1.0;"
+    title = current_page.data.title || "Neo4j.rb"
     = stylesheet_link_tag "normalize", "all"
     = javascript_include_tag  "all"
-
-    = partial 'layouts/forkme'
+		link rel="icon" href="favicon.png" type="image/png"
 
     body.page_classes class="#{page_classes}"
+			= partial 'layouts/nav'
       #main.container
-        .jumbotron
-            h1 Neo4j for Ruby
-        = yield
-        = partial 'layouts/nav'
+				.row
+					= yield
+					= partial 'layouts/sidebar'
+					
+		= partial 'layouts/forkme'
+		

@@ -1,39 +1,95 @@
 @import '_bootstrap';
+@import url(http://fonts.googleapis.com/css?family=Cabin:400,700,400italic,700italic|PT+Sans+Narrow:400,700);
 
-$color0: #2A4F6E;
-$color1: #718DA5;
-$color2: #496C89;
-$color3: #123552;
-$color4: #042037;
-$default-padding: 0.5em;
-$default-border: 1px solid $color3;
+$base: #f1f1f1;
+$copy: #333333;
+$title: #005c6d;
+$highlight: #aa0336;
+
+$padding-xs: 0.25em;
+$padding-sm: 0.5em;
+$padding-md: 1em;
+$padding-lg: 2em;
+$padding-xl: 2.5em;
 
 body {
-  background-color: $color1;
-  color: $color3;
+	font: 16px/1.5 'Cabin', helvetica, sans-serif;
+  background-color: $base;
+  color: $copy;
+}
+
+a {
+	color: $highlight;
+	text-decoration: none;
+	&:hover {
+		color: $highlight;
+		text-decoration: underline;
+	}
+}
+
+img {
+	max-height: 100%;
+	max-width: 100%;
+}
+
+h1, h2, h3, h4, h4 {
+	font-family: 'PT Sans Narrow';
+	font-weight: bold;
+	color: $title;
+	margin-top: 0;
+}
+
+header {
+	padding-top: $padding-md;
+	.icon-bar {
+		background: $highlight;
+	}
+	.navbar-brand {
+		height: 120px;
+	}
+	.navbar-nav {
+		padding-top: $padding-lg;
+	}
+	.nav > li > a:hover, .nav > li > a:focus {
+		background: none;
+		text-decoration: underline;
+	}
+}
+
+@media (max-width: 992px) {
+	header {
+		.navbar-brand {
+				height: 90px;
+			}
+			.navbar-nav {
+				padding-top: $padding-md;
+			}
+	}
+}
+
+#github{
+	z-index: 5;
 }
 
 #main {
-  min-width: 900px;
-}
-
-#sidebar {
-  text-align: center;
-}
-
-.jumbotron {
-  background: transparent;
-  color: $color4;
+	z-index: 1;
 }
 
 .panel {
-  border: $default-border;
-  border-radius: 1em;
-
-  .panel-heading {
-    border-bottom: $default-border;
-    padding-bottom: $default-padding;
+	background: none;
+	border-radius: 0;
+	padding: $padding-lg 0;
+	margin-bottom: 0;
+	border-bottom: 2px solid #e1e1e1;
+  &:first-child {
+  	padding-top: $padding-md;
   }
+	.panel-heading {
+		padding: 0;
+  }
+	.panel-body {
+		padding: 0;
+	}
 }
 
 .article-teaser {
@@ -41,10 +97,16 @@ body {
 
   .title {
     font-size: 1.25em;
-    padding-bottom: $default-padding;
   }
 }
 
 .build-info {
-  padding-bottom: $default-padding;
 }
+
+#sidebar {
+	#stick.affix {
+		top: 20px;
+		max-width: 292px;
+	}
+}
+

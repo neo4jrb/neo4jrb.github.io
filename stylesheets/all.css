@@ -6798,12 +6798,13 @@ header {
 
 /* line 95, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 .article-teaser {
-  border-radius: 1em; }
-  /* line 98, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  border-radius: 1em;
+  margin-bottom: 1em; }
+  /* line 99, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
   .article-teaser .title {
     font-size: 1.25em; }
 
-/* line 107, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 108, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 #sidebar #stick.affix {
   top: 20px;
   max-width: 292px; }

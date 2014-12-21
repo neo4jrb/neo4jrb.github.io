@@ -56,7 +56,6 @@ set :js_dir, 'javascripts'
 set :images_dir, 'images'
 
 activate :blog do |blog|
-  blog.layout = 'layouts/blog_layout.html'
   blog.new_article_template = 'source/layouts/blog_template.html.erb'
   blog.calendar_template = 'blog/calendar.html'
   blog.tag_template = 'blog/tag.html'

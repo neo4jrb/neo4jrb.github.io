@@ -5,7 +5,7 @@ poster: Neo4jrb Team
 summary: A new article
 ---
 
-#content.col-xs-9
+#content.col-xs-8
   .panel
     .panel-heading
       h2 #{current_article.title}
@@ -14,3 +14,5 @@ summary: A new article
         Post body here
     .panel-footer
       | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}
+
+.col-sm-1

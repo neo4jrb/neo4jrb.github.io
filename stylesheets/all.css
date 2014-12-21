@@ -1,5 +1,6 @@
 @charset "UTF-8";
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+@import url(http://fonts.googleapis.com/css?family=Cabin:400,700,400italic,700italic|PT+Sans+Narrow:400,700);
 /* line 9, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/bootstrap/_normalize.scss */
 html {
   font-family: sans-serif;
@@ -4362,8 +4363,8 @@ tbody.collapse.in {
 /* line 194, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/bootstrap/_navbar.scss */
 .navbar-toggle {
   position: relative;
-  float: right;
-  margin-right: 15px;
+  float: left;
+  margin-left: 15px;
   padding: 9px 10px;
   margin-top: 8px;
   margin-bottom: 8px;
@@ -6719,41 +6720,90 @@ button.close {
   /* line 18, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/bootstrap/mixins/_responsive-visibility.scss */
   .hidden-print {
     display: none !important; } }
-/* line 11, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 15, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 body {
-  background-color: #718DA5;
-  color: #123552; }
+  font: 16px/1.5 'Cabin', helvetica, sans-serif;
+  background-color: #f1f1f1;
+  color: #333333; }
 
-/* line 16, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 21, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+a {
+  color: #aa0336;
+  text-decoration: none; }
+  /* line 24, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  a:hover {
+    color: #aa0336;
+    text-decoration: underline; }
+
+/* line 30, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+img {
+  max-height: 100%;
+  max-width: 100%; }
+
+/* line 35, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+h1, h2, h3, h4, h4 {
+  font-family: 'PT Sans Narrow';
+  font-weight: bold;
+  color: #005c6d;
+  margin-top: 0; }
+
+/* line 42, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+header {
+  padding-top: 1em; }
+  /* line 44, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  header .icon-bar {
+    background: #aa0336; }
+  /* line 47, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  header .navbar-brand {
+    height: 120px; }
+  /* line 50, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  header .navbar-nav {
+    padding-top: 2em; }
+  /* line 53, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  header .nav > li > a:hover, header .nav > li > a:focus {
+    background: none;
+    text-decoration: underline; }
+
+@media (max-width: 992px) {
+  /* line 61, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  header .navbar-brand {
+    height: 90px; }
+  /* line 64, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  header .navbar-nav {
+    padding-top: 1em; } }
+/* line 70, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+#github {
+  z-index: 5; }
+
+/* line 74, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 #main {
-  min-width: 900px; }
+  z-index: 1; }
 
-/* line 20, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
-#sidebar {
-  text-align: center; }
-
-/* line 24, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
-.jumbotron {
-  background: transparent;
-  color: #042037; }
-
-/* line 29, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 78, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 .panel {
-  border: 1px solid #123552;
-  border-radius: 1em; }
-  /* line 33, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  background: none;
+  border-radius: 0;
+  padding: 2em 0;
+  margin-bottom: 0;
+  border-bottom: 2px solid #e1e1e1; }
+  /* line 84, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  .panel:first-child {
+    padding-top: 1em; }
+  /* line 87, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
   .panel .panel-heading {
-    border-bottom: 1px solid #123552;
-    padding-bottom: 0.5em; }
+    padding: 0; }
+  /* line 90, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  .panel .panel-body {
+    padding: 0; }
 
-/* line 39, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 95, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
 .article-teaser {
   border-radius: 1em; }
-  /* line 42, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 98, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
   .article-teaser .title {
-    font-size: 1.25em;
-    padding-bottom: 0.5em; }
+    font-size: 1.25em; }
 
-/* line 48, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
-.build-info {
-  padding-bottom: 0.5em; }
+/* line 107, /Users/cgrigg/RailsCrap/neo4jrb.github.io/source/stylesheets/all.scss */
+#sidebar #stick.affix {
+  top: 20px;
+  max-width: 292px; }

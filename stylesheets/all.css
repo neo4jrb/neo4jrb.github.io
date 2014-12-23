@@ -8888,98 +8888,233 @@ button.close {
 .fa-meanpath:before {
   content: ""; }
 
-/* line 16, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/*
+
+github.com style (c) Vasily Polovnyov <vast@whiteants.net>
+
+*/
+/* line 8, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  color: #333;
+  background: #f8f8f8;
+  -webkit-text-size-adjust: none; }
+
+/* line 17, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-comment,
+.diff .hljs-header,
+.hljs-javadoc {
+  color: #998;
+  font-style: italic; }
+
+/* line 24, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-keyword,
+.css .rule .hljs-keyword,
+.hljs-winutils,
+.nginx .hljs-title,
+.hljs-subst,
+.hljs-request,
+.hljs-status {
+  color: #333;
+  font-weight: bold; }
+
+/* line 35, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-number,
+.hljs-hexcolor,
+.ruby .hljs-constant {
+  color: #008080; }
+
+/* line 41, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-string,
+.hljs-tag .hljs-value,
+.hljs-phpdoc,
+.hljs-dartdoc,
+.tex .hljs-formula {
+  color: #d14; }
+
+/* line 49, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-title,
+.hljs-id,
+.scss .hljs-preprocessor {
+  color: #900;
+  font-weight: bold; }
+
+/* line 56, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-list .hljs-keyword,
+.hljs-subst {
+  font-weight: normal; }
+
+/* line 61, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-class .hljs-title,
+.hljs-type,
+.vhdl .hljs-literal,
+.tex .hljs-command {
+  color: #458;
+  font-weight: bold; }
+
+/* line 69, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-tag,
+.hljs-tag .hljs-title,
+.hljs-rules .hljs-property,
+.django .hljs-tag .hljs-keyword {
+  color: #000080;
+  font-weight: normal; }
+
+/* line 77, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-attribute,
+.hljs-variable,
+.lisp .hljs-body {
+  color: #008080; }
+
+/* line 83, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-regexp {
+  color: #009926; }
+
+/* line 87, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-symbol,
+.ruby .hljs-symbol .hljs-string,
+.lisp .hljs-keyword,
+.clojure .hljs-keyword,
+.scheme .hljs-keyword,
+.tex .hljs-special,
+.hljs-prompt {
+  color: #990073; }
+
+/* line 97, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-built_in {
+  color: #0086b3; }
+
+/* line 101, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-preprocessor,
+.hljs-pragma,
+.hljs-pi,
+.hljs-doctype,
+.hljs-shebang,
+.hljs-cdata {
+  color: #999;
+  font-weight: bold; }
+
+/* line 111, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-deletion {
+  background: #fdd; }
+
+/* line 115, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-addition {
+  background: #dfd; }
+
+/* line 119, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.diff .hljs-change {
+  background: #0086b3; }
+
+/* line 123, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/github.css */
+.hljs-chunk {
+  color: #aaa; }
+
+/* line 17, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 body {
   font: 16px/1.5 'Cabin', helvetica, sans-serif;
   background-color: #f1f1f1;
   color: #333333; }
 
-/* line 22, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 23, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 a {
   color: #aa0336;
   text-decoration: none; }
-  /* line 25, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 26, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   a:hover {
     color: #aa0336;
     text-decoration: underline; }
 
-/* line 31, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 32, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 img {
   max-height: 100%;
   max-width: 100%; }
 
-/* line 36, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 37, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 h1, h2, h3, h4, h4 {
   font-family: 'PT Sans Narrow';
   font-weight: bold;
   color: #005c6d;
   margin-top: 0; }
 
-/* line 43, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 44, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 header {
   padding-top: 1em; }
-  /* line 45, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 46, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   header .icon-bar {
     background: #aa0336; }
-  /* line 48, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 49, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   header .navbar-brand {
     height: 120px; }
-  /* line 51, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 52, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   header .navbar-nav {
     padding-top: 2em; }
-  /* line 54, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 55, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   header .nav > li > a:hover, header .nav > li > a:focus {
     background: none;
     text-decoration: underline; }
 
 @media (max-width: 992px) {
-  /* line 62, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 63, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   header .navbar-brand {
     height: 90px; }
-  /* line 65, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 66, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   header .navbar-nav {
     padding-top: 1em; } }
-/* line 72, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 73, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 .dl-horizontal dt {
   width: 80px; }
-/* line 75, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 76, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 .dl-horizontal dd {
   margin-left: 100px; }
 
-/* line 80, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 81, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+code {
+  font-size: 85%;
+  color: #DA4369;
+  background-color: #E8D4D4;
+  border-radius: 4px;
+  padding: 0;
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+
+/* line 93, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 #github {
   z-index: 5; }
 
-/* line 84, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 97, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 #main {
   z-index: 1; }
 
-/* line 88, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 101, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 .panel {
   background: none;
   border-radius: 0;
   padding: 2em 0;
   margin-bottom: 0;
   border-bottom: 2px solid #e1e1e1; }
-  /* line 94, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 107, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   .panel:first-child {
     padding-top: 1em; }
-  /* line 97, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 110, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   .panel .panel-heading {
     padding: 0; }
-  /* line 100, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 113, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   .panel .panel-body {
     padding: 0; }
 
-/* line 105, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 118, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 .article-teaser {
   border-radius: 1em;
   margin-bottom: 1em; }
-  /* line 109, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 122, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   .article-teaser .title {
     font-size: 1.25em; }
 
-/* line 117, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 130, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 #new-github-issue {
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
@@ -9007,14 +9142,14 @@ header {
   margin-left: -9px;
   transform: scale(0.8, 0.8); }
 
-/* line 146, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 159, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 #sidebar #stick.affix {
   top: 20px;
   max-width: 292px; }
-/* line 151, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+/* line 164, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 #sidebar .maintainer {
   margin: 2em 1em; }
-  /* line 154, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  /* line 167, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
   #sidebar .maintainer img {
     width: 70px;
     border: 1px solid black;

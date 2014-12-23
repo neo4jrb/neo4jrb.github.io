@@ -12,7 +12,7 @@
 
 <p>When it came to relationships, things were a little different: it returned the relationship <code>type</code>, which made it possible to map directly to models. I pushed to use <code>_classname</code> there in order to keep consistency throughout the graph and give extra flexibility, since requiring that relationship models match types can make for some awkward model names.</p>
 
-<h3><code>_classname</code> Warfare</h3>
+<h3>Classname Warfare</h3>
 
 <p>Shortly after we released the gem officially -- I&#39;m talking like two or three weeks, tops -- Neo Tech released Neo4j 2.1.5, which included a <code>metadata</code> key in its JSON response. This key contained the labels of each node, something we had requested when we were visiting them in Malmö. The gem had launched, it was too late to go back. Even if we had known, it probably wouldn&#39;t have changed anything, since it would only really benefit people using the bleeding edge release.</p>
 

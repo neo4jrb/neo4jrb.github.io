@@ -8941,10 +8941,10 @@ header {
     padding-top: 1em; } }
 /* line 72, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 .dl-horizontal dt {
-  width: 60px; }
+  width: 80px; }
 /* line 75, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 .dl-horizontal dd {
-  margin-left: 80px; }
+  margin-left: 100px; }
 
 /* line 80, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
 #github {

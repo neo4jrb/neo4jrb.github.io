@@ -93,9 +93,11 @@ title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
         p
           | Like any open source project we happily welcome:
           ul
-            li = link_to 'New issues', 'https://github.com/neo4jrb/neo4j/issues/new'
-            li Pull requests
-            li Documentation
+            li = link_to 'New Issue', 'https://github.com/neo4jrb/neo4j/issues/new', id: 'new-github-issue'
+            li
+              iframe src="http://ghbtns.com/github-btn.html?user=neo4jrb&repo=neo4j&type=fork" allowtransparency="true" frameborder="0" scrolling="0" width="53" height="20" style="position: relative; top: 4px"
+              |  Start a pull request!
+            li Improvements to our documentation for #{link_to 'neo4j', 'https://github.com/neo4jrb/neo4j/wiki'} and #{link_to 'neo4j-core', 'https://github.com/neo4jrb/neo4j-core/wiki'}
 
         p
           | You can also join us on our #{link_to 'mailing list', 'https://groups.google.com/forum/#!forum/neo4jrb'}

@@ -97,6 +97,35 @@ title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
 
         h4 Neo4j.rb
         p
+          markdown:
+            In your `Gemfile`
+
+            ```ruby
+              gem 'neo4j'
+            ```
+
+            A sample ActiveNode model
+
+            ```ruby
+             class User
+                include Neo4j::ActiveNode
+
+                property :name
+                property :age, type: Integer
+
+                has_many :out, :friends, type: :friends_with, class_name: 'User'
+                has_one :in,   :github_profile, type: :linked_to  # class_name: 'GithubProfile' assumed
+              end
+            ```
+
+            Using query chaining to get the github profiles for a user's friends
+
+            ```ruby
+              user.friends.github_profile
+            ```
+
+
+        p
           | If you're the sort who likes to watch a video, check out our intro #{link_to 'screencast', 'https://www.youtube.com/watch?v=bDjbqRL9HcM'}.
           br
           | If you like to read, check out our wiki's #{link_to 'setup page', 'https://github.com/neo4jrb/neo4j/wiki/Neo4j-v3-Setup'}.

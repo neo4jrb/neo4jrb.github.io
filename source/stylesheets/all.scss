@@ -1,4 +1,5 @@
 @import '_bootstrap';
+@import 'fontawesome/font-awesome';
 @import url(http://fonts.googleapis.com/css?family=Cabin:400,700,400italic,700italic|PT+Sans+Narrow:400,700);
 
 $base: #f1f1f1;
@@ -65,6 +66,15 @@ header {
 				padding-top: $padding-md;
 			}
 	}
+}
+
+.dl-horizontal {
+  dt {
+    width: 60px;
+  }
+  dd {
+    margin-left: 80px;
+  }
 }
 
 #github{

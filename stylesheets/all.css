@@ -8983,3 +8983,11 @@ header {
 #sidebar #stick.affix {
   top: 20px;
   max-width: 292px; }
+/* line 123, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+#sidebar .maintainer {
+  margin: 2em 1em; }
+  /* line 126, /Users/brian/github/neo4jrb/neo4jrb.github.io/source/stylesheets/all.scss */
+  #sidebar .maintainer img {
+    width: 70px;
+    border: 1px solid black;
+    border-radius: 0.5em; }

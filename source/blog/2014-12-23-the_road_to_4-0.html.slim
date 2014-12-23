@@ -26,7 +26,7 @@ tags: releases, blog, history lesson
 
         When it came to relationships, things were a little different: it returned the relationship `type`, which made it possible to map directly to models. I pushed to use `_classname` there in order to keep consistency throughout the graph and give extra flexibility, since requiring that relationship models match types can make for some awkward model names.
 
-        ### `_classname` Warfare
+        ### Classname Warfare
 
         Shortly after we released the gem officially -- I'm talking like two or three weeks, tops -- Neo Tech released Neo4j 2.1.5, which included a `metadata` key in its JSON response. This key contained the labels of each node, something we had requested when we were visiting them in Malmö. The gem had launched, it was too late to go back. Even if we had known, it probably wouldn't have changed anything, since it would only really benefit people using the bleeding edge release.
 

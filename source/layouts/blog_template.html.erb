@@ -1,18 +1,20 @@
 ---
 title:  <%= @title.titleize %>
 date: <%= @date %>
-poster: Neo4jrb Team
+poster: Neo4j.rb Team
 summary: A new article
 ---
 
 #content.col-xs-8
-  .panel
+  .panel.blog-post
     .panel-heading
       h2 #{current_article.title}
     .panel-body
       markdown:
         Post body here
     small
-      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
 
 .col-sm-1

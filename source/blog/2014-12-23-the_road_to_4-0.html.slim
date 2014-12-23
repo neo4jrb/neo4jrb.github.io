@@ -1,0 +1,66 @@
+---
+title: The Road To 4.0
+date: 2014-12-23 01:26:05 UTC
+poster: Chris Grigg
+summary: Neo4j.rb 4.0 is approaching! Chris gives a Neo4j.rb history lesson and talks about the future.
+tags: releases, blog, history lesson
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        When we released Neo4j.rb 3.0, it was the result of about a year's worth of work, a complete rebuild of both the Neo4j and Neo4j-core gems. We were proud of it, and reasonably so, since we reached all of our major goals: Ruby MRI support, node and relationship classes, more of an ActiveRecord feel, more powerful associations, and improved Cypher DSL, just to name the big ones. Sure, there was more to do, but a lot of progress had been made and Neo4j + Rails could be together at last!
+
+        Still, there was something that always bugged me: the `_classname` property.
+
+        ### The Sordid History of `_classname`
+
+        `_classname` first appeared in Neo4j.rb 2.0, which used Neo4j 1.9 in Embedded mode. In those dark days, there were no labels, so the only way of identifying the class of a node was through a property. Someone decided `_classname` as the one to use and that was that.
+
+        Fast-forward to the dev process for Neo4j.rb 3.0, which went all-in with Neo4j 2.0. Now that we had labels, we had an easy way to match a node to a class! Hoorah! Except... not. By default, returning a node from Cypher wouldn't give you its labels. `MATCH (n) WHERE ID(n) = {node_id} RETURN n` would give you the IDs, properties, and a whole lot of REST endpoints, but no labels. The solution? A second query to get the missing info, `MATCH (n) WHERE ID(n) = {node_id} RETURN LABELS(n)`. One extra query for every single node returned from the database. Not cool.
+
+        The solution, of course, was to go back to `_classname`. I implemented the code -- it was one of my first big contributions to the gem, if I remember correctly -- but nobody was really thrilled by the prospect. We try to avoid poluting the graph with metadata hidden from the user as much as possible, so it just felt sort of wrong; on top of that, it made interoperability with existing Neo4j databases require a potentially painful migration to add the missing property or be doomed to n + 1 Hell.
+
+        When it came to relationships, things were a little different: it returned the relationship `type`, which made it possible to map directly to models. I pushed to use `_classname` there in order to keep consistency throughout the graph and give extra flexibility, since requiring that relationship models match types can make for some awkward model names.
+
+        ### `_classname` Warfare
+
+        Shortly after we released the gem officially -- I'm talking like two or three weeks, tops -- Neo Tech released Neo4j 2.1.5, which included a `metadata` key in its JSON response. This key contained the labels of each node, something we had requested when we were visiting them in Malmö. The gem had launched, it was too late to go back. Even if we had known, it probably wouldn't have changed anything, since it would only really benefit people using the bleeding edge release.
+
+        Still, we were excited about killing off `_classname` and put it at the top of our wishlist for 4.0. The changes are all merged into master and we should be able to do a final release shortly.
+
+        So... how does it work? It's not all that complicated. The tl;dr version is that it looks for a `_classname` property, uses it if it finds it, and falls back to relationship type or labels if not. If labels are missing -- say, you're using Neo4j 2.1.4 and for some reason disabled `_classname` or are using an existing database -- it perform an additional query to find the labels and load the node as expected. If for some reason you want to use `_classname`, you can use it; if you want an ActiveRel model that doesn't match the `type` value, you can do that; if you have an ActiveRel model named to match the intended `type`, you can skip the `type` method altogether! Cool stuff. We keep maintain a stable master branch and believe this to be safe to use now.
+
+        ### But wait, there's more!
+
+        The 4.0 version of the gem is full of new features. More than anything else, I'm excited about Brian's updates to scopes: you're now able to call scopes and methods within QueryProxy chains.
+
+
+				```ruby
+				def top_students
+				  all.students(:s, :r).where(gpa: 100)
+				end
+
+				def top_teachers
+				  all.top_students.teachers
+				end
+
+				# in your code, to return all of the top teachers for Math...
+				math.top_teachers.to_a
+				```
+
+        Cool.
+
+        I'm also particularly stoked about `match_to`, `rels_to`, and the ability to use `OPTIONAL MATCH` and switch from `Neo4j::Core::Query` back to `Neo4j::ActiveNode::Query::Proxy` within one chain.
+
+        Sometime soon, we'll do a couple blog posts (or screencasts?) elaborating on some of these new features; in the meantime, the [changelog file](https://github.com/neo4jrb/neo4j/blob/master/CHANGELOG) covers the basics and the [4.0 introduction](https://github.com/neo4jrb/neo4j/wiki/Neo4j.rb-v4-Introduction) goes into some more depth. As always, we're always happy to receive pull requests, answer questions, or see/hear about what you're doing with the gem(s)!
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

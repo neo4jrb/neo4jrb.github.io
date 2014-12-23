@@ -47,7 +47,7 @@
 #   end
 # end
 
-Slim::Engine.set_options({ tabsize: 2 })
+Slim::Engine.set_options({ tabsize: 2, :markdown => {:fenced_code_blocks => true} })
 
 set :css_dir, 'stylesheets'
 

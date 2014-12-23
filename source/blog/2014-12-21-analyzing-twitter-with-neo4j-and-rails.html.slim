@@ -6,7 +6,7 @@ summary: Analyzing Twitter with Neo4j and Rails
 ---
 
 #content.col-xs-8
-  .panel
+  .panel.blog-post
     .panel-heading
       h2 #{current_article.title}
     .panel-body
@@ -15,6 +15,8 @@ summary: Analyzing Twitter with Neo4j and Rails
 
         Read more on [Brian's Blog](http://blog.brian-underwood.codes/ruby/rails/neo4j/announcements/2014/12/17/analyzing_twitter_with_neo4j_and_rails/)
     small
-      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
 
 .col-sm-1

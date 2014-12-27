@@ -1,0 +1,83 @@
+---
+title:  Performance Gains In 4.0
+date: 2014-12-26 23:52:45 UTC
+poster: Chris Grigg
+summary: Neo4j.rb 4.0 and Neo4j-core 3.1.2 boast impressive performance improvements thanks to simple refactoring.
+tags: benchmarks, news, milestones
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        Over the past few days, I've been seeking and destroying some bugs that are usually simple to correct: gem-created Cypher queries that don't use params and n + x calls to the database. You can see all of the pull requests so far [here](https://github.com/neo4jrb/neo4j-core/pull/146/files), [here](https://github.com/neo4jrb/neo4j-core/pull/147/files), and [here](https://github.com/neo4jrb/neo4j/pull/651/files), but there may be one more coming. I expected a slight performance improvement but after running benchmarks, what I found was quite a bit more impressive.
+
+        I have a simple series of queries that I use to get some baseline performance stats. Create two nodes, create a relationship, return the relationship, delete the nodes. Once without a transaction, once within a transaction, and this time I added transaction + ActiveRel. All specs are run on my MacBook Pro (SSD) using Ruby 2.2.0 and Neo4j 2.2.0 M02 with completely stock settings. I found the 2-second warmup in the tests to be insufficient to let caches warm up, so these are after a few minutes of running the tests.
+
+        ```
+        require 'benchmark/ips'
+        Student.delete_all; Lesson.delete_all
+        Benchmark.ips do |x|
+          x.config(warmup: 2, time: 60)
+
+          x.report('create, create, rel, destroy') do
+            s = Student.create(name: 'Lauren'); l = Lesson.create(subject: 'Math'); s.lessons << l; s.lessons.first; s.destroy; l.destroy
+          end
+
+          x.report('transaction create, create, rel, destroy') do
+            begin
+              tx = Neo4j::Transaction.new
+              s = Student.create(name: 'Lauren'); l = Lesson.create(subject: 'Math'); s.lessons << l; s.lessons.first; s.destroy; l.destroy
+            ensure
+              tx.close
+            end
+          end
+
+          x.report('transaction create with activerel') do
+            begin
+              tx = Neo4j::Transaction.new
+              s = Student.create(name: 'Lauren'); l = Lesson.create(subject: 'Math'); EnrolledIn.create(from_node: s, to_node: l); s.lessons.first; s.destroy; l.destroy
+            ensure
+              tx.close
+            end
+          end
+
+          x.compare!
+        end
+        ```
+        Before (Neo4j.rb 4.0.0.rc.3 and Neo4j-core 3.1.0):
+
+        * transaction create with activerel:       25.0 i/s
+        * transaction create, create, rel, destroy:       20.7 i/s - 1.21x slower
+        * create, create, rel, destroy:       18.3 i/s - 1.36x slower
+
+        After (master branches on December 26, 2014):
+
+        * transaction create, create, rel, destroy:       59.9 i/s
+        * transaction create with activerel:       58.4 i/s - 1.03x slower
+        * create, create, rel, destroy:       30.1 i/s - 1.99x slower
+
+        I ran another test, a basic create node/destroy node test both with and without a transaction. There are two transaction tests because one used `Neo4j::Transaction.run` with a block, the other used `Neo4j::Transaction.new`.
+
+        Before:
+
+        * destroy without transaction:       64.3 i/s
+        * destroy with transaction - run:       58.6 i/s - 1.10x slower
+        * destroy with transaction - new:       58.4 i/s - 1.10x slower
+
+        After:
+
+        * destroy without transaction:      150.0 i/s
+        * destroy with transaction - new:      130.9 i/s - 1.15x slower
+        * destroy with transaction - run:      127.8 i/s - 1.17x slower
+
+        That's a huge difference from really basic refactoring. Everyone should benefit from this, so I'm pretty happy about it. It also reaffirms that even if you aren't adding new features, you can always help an open source project by refactoring existing code. We always welcome pull requests, so if you ever have some time and want to get involved, benchmarks and improvements are always a great way to get involved.
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

@@ -1,0 +1,48 @@
+---
+title:  Stay Out Of Trouble
+date: 2014-12-29 09:19:43 UTC
+poster: Brian Underwood
+summary: On Rubocop
+tags: style,quality,ruby
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      blockquote
+        p "Excuse me, I have to go. Somewhere there is a bug happening." - Robocop (1987) (kinda)
+
+      blockquote
+        p Reporter: "Robo, excuse me, Robo, any special message for all the kids watching at home?"
+        p RoboCop: "Stay out of trouble."
+        p - Robocop (1987) (for real)
+
+      markdown:
+        
+        I recently attended the December [Ruby Zagreb Meetup](http://www.meetup.com/rubyzg/).  In addition to learning about the excellent gem [webmachine](https://github.com/basho/webmachine) I also learned about [Rubocop](http://batsov.com/rubocop/), as presented by [Željko Filipin](http://filipin.eu/) and as outlined in his blog post on the topic.
+
+        Rubocop scans your code and shows you when new code is not conforming to agreed upon style, if you aren't using good/secure practices, or if your code is too complex.  In addition it can:
+
+         * Allow configuration of it's various tests (called "cops")
+         * Automatically fix certain problems when you run `rubocop -a`
+         * Act as a gatekeeper in continuous integration
+
+        We've just implemented Rubocop in both the [neo4j](http://github.com/neo4jrb/neo4j) and [neo4j-core](https://github.com/neo4jrb/neo4j-core) gems and it's fixed and standardized a lot of our code.  It addition we've configured Travis CI to run Rubocop for every build and fail the build if any violations are found.  This way we can focus on higher level problems when reviewing pull requests (which appeals to us both as Ruby-ists and Neo4j-ists)
+
+        As per Željko's suggestions in [his post](http://filipin.eu/rubocop/) we created `.rubocop_todo.yml` files in addition to our `.rubocop.yml` files.  These are lists of cops which we haven't yet enabled / set back to defaults, either because:
+
+         * Refactoring is to complex to deal with right now
+         * We're not sure if we want to implement the cop
+
+        Inside the `.rubocop.yml` file are all of the rules that we've configured different from the defaults or rules that we've decided not to implement.  You can see the config for `neo4j` [here](https://raw.githubusercontent.com/neo4jrb/neo4j/master/.rubocop.yml)
+
+        If you use ruby, and especially if you maintain an open source project, give Rubocop a try!
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

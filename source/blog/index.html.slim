@@ -1,0 +1,29 @@
+---
+pageable: true
+per_page: 12
+---
+
+#content.col-xs-8
+  .panel
+    .panel-heading
+      h1 News and Blog Archive
+
+	  .panel-body
+			- if paginate && num_pages > 1
+			  p Page #{page_number} of #{num_pages}
+
+			  - if prev_page
+			    p #{link_to 'Previous page', prev_page}
+
+			ul
+			  - page_articles.each_with_index do |article, i|
+					p
+						| #{link_to article.title, article} (#{article.date.strftime('%b %e, %Y')})
+						br
+						| #{article.data.summary}
+
+			- if paginate
+			  - if next_page
+			    p #{link_to 'Next page', next_page}
+
+.col-sm-1

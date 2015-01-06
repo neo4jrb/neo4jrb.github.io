@@ -61,6 +61,7 @@ activate :blog do |blog|
   blog.tag_template = 'blog/tag.html'
   blog.prefix = 'blog'
   blog.default_extension = ".slim"
+  blog.paginate = true
 end
 
 set :markdown_engine, :redcarpet

@@ -1,7 +1,9 @@
 ---
-title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
----
+title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
 
+---
+  div style='display: none;'
+    |'fixes sublimetext color bug, ignore
   #content.col-sm-8
     .panel
       .panel-heading
@@ -60,11 +62,12 @@ title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
         - if blog.articles.empty?
           | There are no posts at this time.
         - else
-          - blog.articles[0...5].each do |article|
+          - blog.articles[0...6].each do |article|
             .article-teaser
               .title #{link_to article.title, article} (#{article.date.strftime("%Y/%m/%d")})
               .body
                 = article.data.summary
+        = link_to "News Archive", '/blog/'
 
     #getting-started.panel
       .panel-heading

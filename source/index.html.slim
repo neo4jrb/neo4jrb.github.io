@@ -138,13 +138,17 @@ title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
             ```ruby
               neo4j_session = Neo4j::Session.open(:server_db, ENV['NEO4J_DB_URL'])
 
-              me = neo4j_session.query('MATCH (found:User) WHERE found.name = {aName} RETURN found', aName: 'Andreas').first.found
+              me = neo4j_session.query('MATCH (found:User) WHERE found.name = {aName} RETURN found',
+                                       aName: 'Andreas').first.found
             ```
 
             There is also a query-building API which allows you to build cypher queries with method chaining:
 
             ```ruby
-              user = neo4j_session.query.match(found: :User).where(found: {name: 'Andreas'}).return(:user).first.found
+              user = neo4j_session.query.match(found: :User).
+                                          where(found: {name: 'Andreas'}).
+                                          return(:user).
+                                          first.found
             ```
 
             At each step in the chain a query object is returned which is also `Enumerable`.  See the [documentation](https://github.com/neo4jrb/neo4j-core/wiki/Queries) for more info.

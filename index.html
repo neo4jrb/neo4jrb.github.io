@@ -29,12 +29,16 @@
 
 <pre><code class="ruby">  neo4j_session = Neo4j::Session.open(:server_db, ENV[&#39;NEO4J_DB_URL&#39;])
 
-  me = neo4j_session.query(&#39;MATCH (found:User) WHERE found.name = {aName} RETURN found&#39;, aName: &#39;Andreas&#39;).first.found
+  me = neo4j_session.query(&#39;MATCH (found:User) WHERE found.name = {aName} RETURN found&#39;,
+                           aName: &#39;Andreas&#39;).first.found
 </code></pre>
 
 <p>There is also a query-building API which allows you to build cypher queries with method chaining:</p>
 
-<pre><code class="ruby">  user = neo4j_session.query.match(found: :User).where(found: {name: &#39;Andreas&#39;}).return(:user).first.found
+<pre><code class="ruby">  user = neo4j_session.query.match(found: :User).
+                              where(found: {name: &#39;Andreas&#39;}).
+                              return(:user).
+                              first.found
 </code></pre>
 
 <p>At each step in the chain a query object is returned which is also <code>Enumerable</code>.  See the <a href="https://github.com/neo4jrb/neo4j-core/wiki/Queries">documentation</a> for more info.</p>

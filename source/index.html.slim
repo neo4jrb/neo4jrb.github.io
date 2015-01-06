@@ -95,7 +95,7 @@ title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
 
 
 
-        h4 Neo4j.rb
+        h4 Modeling
         p
           markdown:
             In your `Gemfile`
@@ -129,6 +129,25 @@ title: "Neo4j.rb: (ruby)-[:LOVES]-(neo4j)"
           | If you're the sort who likes to watch a video, check out our intro #{link_to 'screencast', 'https://www.youtube.com/watch?v=bDjbqRL9HcM'}.
           br
           | If you like to read, check out our wiki's #{link_to 'setup page', 'https://github.com/neo4jrb/neo4j/wiki/Neo4j-v3-Setup'}.
+
+        h4 Simple queries
+        p
+          markdown:
+            If you just want to execute some raw cypher queries you only need the `neo4j-core` gem.
+
+            ```ruby
+              neo4j_session = Neo4j::Session.open(:server_db, ENV['NEO4J_DB_URL'])
+
+              user = neo4j_session.query('MATCH (user:User) RETURN user').first.user
+            ```
+
+            There is also a query-building API which allows you to build cypher queries with method chaining:
+
+            ```ruby
+              user = neo4j_session.query.match(user: :User).return(:user).first.user
+            ```
+
+            At each step in the chain a query object is returned which is also `Enumerable`.  See the [documentation](https://github.com/neo4jrb/neo4j-core/wiki/Queries) for more info.
 
 
     #getting-involved.panel

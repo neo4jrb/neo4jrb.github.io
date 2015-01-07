@@ -1,0 +1,50 @@
+---
+title:  Association Dependent Options
+date: 2015-01-07 00:52:00 UTC
+poster: Chris Grigg
+summary: Chris outlines new association `dependent` options.
+tags: changelog
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        (This is really part two of the post about transactions, but it's both long and significant enough that I thought it warranted another post. If you haven't read part 1, maybe you could [click here](/blog/2015/01/06/transactions_everywhere.html) and check it out.)
+
+        We've had a lot of requests for `dependent: :destroy` and `dependent: :delete` and now that we wrap everything in transactions, we're able to add this safely. It was merged into master a few hours ago and will be in the next RC... with a very graphy twist. Read on.
+
+        If you haven't used either of these before in ActiveRecord, the idea is pretty simple: add one of those options to the end of an association and when a node is destroyed, it will perform the given action on all associated records. If I call `post.destroy` and that Post has many Comments, all of the comments will also be deleted in Cypher or destroyed in Ruby, depending on the option given.
+
+        So... what's the graphy twist? Something I describe as `dependent: :delete_orphans` and `dependent: :destroy_orphans`. Aside from being two of the most [metal](/images/immortal.png) options in the gem, they let you do something that could be very expensive in SQL: delete or destroy only those related nodes that will be "orphaned" -- have no other relationships of the same type -- when a node is destroyed.
+
+        Imagine you have an app that models live events. You have models for Tour, Route, Stop. A tour can have multiple routes, a route can only have one tour and any number of stops, a stop can be associated with multiple routes but must have at least one. You could model the `:stops` association like this:
+
+        ```ruby
+        class Route
+          include Neo4j::ActiveNode
+          has_many :out, :stops, type: 'STOPPING_AT', dependent: :delete_orphans
+        end
+        ```
+
+        Now, when you call `route.destroy`, it will write a Cypher query to match and delete *only* those Stops that have no other routes associated with them. In SQL, this could be an extremely complicated, expensive query; in Neo4j... not so much. It's actually very easy to write in Cypher:
+
+        ```
+        MATCH (route:Route {id: {route_id} })
+        WITH route
+        OPTIONAL MATCH (route)-[r:STOPPING_AT]->(s)
+        WHERE NOT EXISTS((route)--(s)<-[:STOPPING_AT]-())
+        DELETE r,s
+        ```
+
+        Of course, performance will greatly depend on how many associated nodes you have, but our tests indicate great performance. Benchmarks to come. As with ActiveRecord, be aware that both `:destroy` options will return each matched node to Ruby and call `destroy` one by one, so you may take a big performance hit if there are a high number of related objects.
+
+        That's pretty much it. This is a new feature so if you're going to dive in on the master branch, please be sure to get in touch if you run into any bugs or have any feedback. Until then, enjoy!
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

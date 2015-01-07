@@ -1,0 +1,50 @@
+---
+title:  Transactions Everywhere
+date: 2015-01-06 23:57:45 UTC
+poster: Chris Grigg
+summary: Neo4j.rb v4 wraps all create, update, and destroy actions in transactions.
+tags: news, changelog, milestones, transactions
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 Transactions Everywhere
+    .panel-body
+      markdown:
+        Neo4j is ACID-compliant, meaning that when it says that an action is complete, you can trust that it means it. To achieve this over the course of a series of actions, it offers transactions: every action occurring within a single or series of transaction(s) can be committed or rolled back as a group. Neo4j.rb 3.0 had limited support for transactions when it was released, then full support was added in an update soon after. Wrapping actions in a transaction is easy.
+
+        ```ruby
+        Neo4j::Transaction.run do |tx|
+          s = Student.create(name: 'Jasmine')
+          l = Lesson.create(subject: 'Math')
+          s.lessons << l
+          if s.some_important_method
+            # all is well, keep going
+          else
+            tx.failure
+          end
+        end
+        ```
+
+        At any time, you can call `tx.failure` to invalidate the whole transaction. Neither Student nor Lesson would be created. If an exception is raised, the entire thing is rolled back, too. Pretty cool. As an added bonus, performance is improved VS individual actions because the server doesn't perform a commit until the very end.
+
+        In contrast with ActiveRecord, Neo4j.rb v3 does not wrap individual Create, Update, and Destroy actions in transactions. That means that a simple `s = Student.create` would be a standalone operation, as would `s.destroy`, and any callbacks that occur -- a cascading `destroy` operation of associated objects, for instance -- would all be independent, too. The solution to this is pretty simple, you just start a transaction before calling `destroy`.
+
+        There were two big reasons for this default in v3:
+
+        * First, as mentioned earlier, v3 didn't have support for transactions when it was released. We couldn't have done this if we wanted to.
+        * Second, and this became a bigger problem after the basic "we-just-can't-do-it" problem was resolved, transaction performance in v3 was just good enough that we felt comfortable forcing this as a default.
+
+        If you happened to read the blog post from December 26 about #{link_to "peformance improvements in 4.0", "http://localhost:4567/blog/2014/12/26/performance_gains_in_4-0.html"}, you might see where this is going. By identifying unnecessary, wasteful database queries and taking better advantage of parameterized queries, we were able to more than double performance in most queries. (It got even better, btw.) As a result, we're now in a position where we can wrap every basic database action called by an ActiveNode or ActiveRel instance in a transaction. **This is a default in v4 and will be present in a new RC in coming days.**
+
+        ![TRANSACTIONS](transactions.jpg)
+
+        I'm stoked about this because it improves the reliability of everything that happens within the gem. If there's a downside, it's that we do take a slight performance hit because every action requires a second query to close the transaction, but we've improved performance so much that we're still in excellent shape. I think that it's a very reasonable default. The upside is that if you encounter an exception within the course of an action, the transaction will roll back -- just like it does in ActiveRecord. This is also true for callbacks related to each action, which brings us to our next topic... [Association dependent options in v4!](/blog/2015/01/07/association_dependent_options.html)
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

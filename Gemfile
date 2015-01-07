@@ -23,3 +23,6 @@ gem 'slim'
 gem 'coffee-script'
 gem 'sass'
 gem 'jquery-middleman'
+
+gem 'therubyracer'
+gem 'oj'

@@ -19,6 +19,10 @@
 
 <p>We are running all of our tests against 2.2.0-M01 right now and will move to 2.2.0 when it is released. You can see our CI at <a href="https://travis-ci.org/neo4jrb/neo4j">https://travis-ci.org/neo4jrb/neo4j</a>, where you&#39;ll notice we&#39;re testing against Ruby 2.2.0, 1.9.3, and JRuby 1.7.16.</p>
 
+<h4>SPEED</h4>
+
+<p>Almost everything you do will be faster. Our benchmarks show performance improvements of more than 2x on most repeat queries. This is mostly thanks to changes in Neo4j-core. Read about it at <a href="http://neo4jrb.io/blog/2014/12/26/performance_gains_in_4-0.html">here</a>. This will be very noticeable in environments where your database and web servers are on two different machines.</p>
+
 <h4>&quot;_classname&quot; properties are no longer added (Neo4j 2.1.5+)</h4>
 
 <p><code>_classname</code>, one of our least favorite (but totally necessary) features of 3.x, is not needed anymore as long as you are running Neo4j 2.1.5 or greater, which you should be. See <a href="http://neo4jrb.io/blog/2014/12/23/the_road_to_4-0.html">http://neo4jrb.io/blog/2014/12/23/the<em>road</em>to_4-0.html</a> for more detail than you&#39;ll ever want. <a href="https://github.com/neo4jrb/neo4j/wiki/Neo4j.rb-v4-Introduction">This wiki page</a> outlines the implications of this.</p>
@@ -42,6 +46,10 @@
 <h4>Scopes are more powerful</h4>
 
 <p>You can now chain scopes and methods to QueryProxy objects. If <code>top_students</code> is defined as a scope or method in <code>Lesson</code> that finds students with certain grades, <code>Student.all.where(age: 18).lessons.top_students</code> will now work. See <a href="https://github.com/neo4jrb/neo4j/blob/master/spec/e2e/scope_spec.rb">this spec</a> for examples, with more documentation to come.</p>
+
+<h4>Our code is cleaner and more consistent</h4>
+
+<p>Brian spent a few days attacking both gems with Rubocop and his keen eye for detail. Rubocop compliance is now a required part of our test process. We have some strong feelings about this; see <a href="http://neo4jrb.io/blog/2014/12/29/stay-out-of-trouble.html">Brian&#39;s post on the topic</a>.</p>
 
 <h4>New association option: <code>dependent</code></h4>
 

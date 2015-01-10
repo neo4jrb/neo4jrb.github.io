@@ -1,0 +1,97 @@
+---
+title:  Neo4j.rb v4.1 Released
+date: 2015-01-09 23:16:23 UTC
+poster: Chris Grigg
+summary: 4.1 released along with neo4j-core 4.0.
+tags: news, releases, milestones, changelog
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        Just three months since releasing 3.0, we're proud to have Neo4j.rb 4.1, and Neo4j-core 4.0 released to the world. Are you excited? [We're stoked](http://www.theonion.com/video/report-most-college-males-admit-to-regularly-getti,14386/). Get it by changing your gemfile to `gem 'neo4j', '~> 4.1.0'` or if you just have `gem 'neo4j'`, a `bundle update neo4j` will do it. Please see [this article](https://github.com/neo4jrb/neo4j/wiki/Neo4j.rb-v4-Introduction), which outlines the potentially breaking API changes related to relationship types.
+
+        ### What happened to 4.0?
+
+        Why jump straight to 4.1? Well, we didn't really, we just released 4.0 and 4.1 within 40 minutes of each other. It's pretty simple, really:
+
+          * 4.0.0 is 4.0.0.rc.4 (released Dec 22, 2014) with the gemspec set to require neo4j-core 4.0.0, which has no changes we expect to cause problems but many important performance fixes.
+          * 4.1.0 includes all of the commits made since Dec 22.
+
+        This was done because we want users to trust that if rc4 worked for them, 4.0.0 can be trusted. We did not want to do another release candidate. It was time to get this ship a sailin'.
+
+        ### What Changed Since 3.x?
+
+        #### Full Support for Neo4j 2.2
+
+        This includes the new basic authentication option. A new class in Neo4j-core lets you work directly with the authentication REST endpoint. There are new rake tasks, too: `neo4j:enable_authentication`, `neo4j:disable_authentication`, and `neo4j:change_password`. `neo4j:install` has been updated to disable basic auth automatically, as this is intended for low-security dev environments.
+
+        #### "_classname" properties are no longer added (Neo4j 2.1.5+)
+
+        `_classname`, one of our least favorite (but totally necessary) features of 3.x, is not needed anymore as long as you are running Neo4j 2.1.5 or greater, which you should be. See [http://neo4jrb.io/blog/2014/12/23/the_road_to_4-0.html](http://neo4jrb.io/blog/2014/12/23/the_road_to_4-0.html) for more detail than you'll ever want. [This wiki page](https://github.com/neo4jrb/neo4j/wiki/Neo4j.rb-v4-Introduction) outlines the implications of this.
+
+        #### Better automatic relationship types
+
+        If you use automatic relationship typing, `has_many :out, :students`, 4.x will now make the relationship type `STUDENTS` instead of `#students`. This is to bring it in line with Neo4j relationship naming best practices. It can be configured for legacy purposes and taste, see [this documentation](https://github.com/neo4jrb/neo4j/wiki/Neo4j-v3-Declared-Relationships#in-v4-declared-auto-generated-relationship-types-are-all-caps). The wiki page linked above also spells this out quite a bit.
+
+        #### ActiveRel: automatic matching of returned relationships to models, no more explicit "type" required
+
+        If you create an ActiveRel class called `EnrolledIn`, it will automatically set the type to `ENROLLED_IN` -- you do not need to explicitly say `type 'ENROLLED_IN'`. It respects whatever options you set when configuration automatic relationship types as described in the documentation above.
+
+        As a bonus, if you create a relationship from an association, say `student.lessons << math` and your Student model is set with `has_many :out, :lessons, type: 'ENROLLED_IN'`, the `rel_class` option is unnecessary. This is all related to the death of `_classname`.
+
+        The flipside of this is that if your relationship model's name does not match the relationship type, you should enable `eager_load` in your Rails environment's config. See docs for more details. Once more, see [this page](https://github.com/neo4jrb/neo4j/wiki/Neo4j.rb-v4-Introduction) for a clear walkthrough of these implications.
+
+        #### All create, update, and destroy actions are wrapped in transactions
+
+        Thanks to performance improvements in core, we can do this and things are still much faster than 3.x. See [this blog post](http://neo4jrb.io/blog/2015/01/06/transactions_everywhere.html) for info.
+
+        #### Scopes are more powerful
+
+        You can now chain scopes and methods to QueryProxy objects. If `top_students` is defined as a scope or method in `Lesson` that finds students with certain grades, `Student.all.where(age: 18).lessons.top_students` will now work. See [this spec](https://github.com/neo4jrb/neo4j/blob/master/spec/e2e/scope_spec.rb) for examples, with more documentation to come.
+
+        #### New association option: `dependent`
+
+        Similar to ActiveRecord, `dependent: :delete` and friends are now options on associations in ActiveNode. We have some uniquely graphy options, too. See blog post [here](http://neo4jrb.io/blog/2015/01/07/association_dependent_options.html).
+
+        #### Association option: `unique: true` and ActiveRel class method `creates_unique_rel`
+
+        Using either of these will change the Cypher used to create relationships from `CREATE` to `CREATE UNIQUE`. You can read about that in Neo4j's [`CREATE UNIQUE` documentation](http://neo4j.com/docs/stable/query-create-unique.html).
+
+        #### "OPTIONAL MATCH" and chaining QueryProxy to Core::Query back to QueryProxy
+
+        It's now possible to use Cypher's OPTIONAL MATCH in QueryProxy instead of plain ole MATCH and transform a `Core::Query` object into a friendlier `QueryProxy` object. A blog or possibly screencast is coming about this but in the meantime, the best places to see these in action are the specs: [optional](https://github.com/neo4jrb/neo4j/blob/ba0763c5f8e25a705c6c8bb5a63adf82df8cb3cf/spec/e2e/query_proxy_methods_spec.rb#L391) and [proxy_as](https://github.com/neo4jrb/neo4j/blob/070e6d9fdec62222f805af4f1b46a729f545e333/spec/e2e/query_spec.rb#L343). There's also a `proxy_as_optional` method in Core::Query if you're looking for more control.
+
+        #### A lot of new QueryProxy instance methods
+
+        Things like...
+
+        * `match_to`, for creating a match around a specific node, id, or group of nodes
+        * `rels_to` and `first_rel_to`, returns all rels or the first rel between a chain and a given node
+        * `rel_where`, like `where` but for relationships
+        * `node_where`, an aliased version of `where` to make things a bit more explicit and readable
+        * `delete_all`, deletes all matched nodes and rels within Cypher
+        * `delete` and `destroy`, which destroy relationships matched in Cypher and Ruby, respectively
+
+        The [`query_proxy_methods_spec.rb`](https://github.com/neo4jrb/neo4j/blob/master/spec/e2e/query_proxy_methods_spec.rb) file is easy to read and demonstrates all of these, so it's a great thing to keep an eye on.
+
+        ### Upgrading an App from 3.x to 4.x
+
+        If you have a 3.x app, the upgrade process is relatively simple.
+
+        * If you are using automatic relationship naming, meaning you do not use the `type` option in associations, your relationship types will change. Set `config.neo4j.transform_rel_type = :legacy` in `application.rb` or update your data and modify Cypher queries based on the new automatic names. See [this](https://github.com/neo4jrb/neo4j/wiki/Neo4j.rb-v4-Introduction#automatic-relationship-types).
+        * If the above applies to you, note that `transform_rel_type` will also affect ActiveRel's new automatic relationship naming. You should continue using `type` in your models and enable `eager_load` in your environment's config file.
+        * If you are using ActiveRel and your model names do not match the relationship types (your model is `StudentLesson` and the type is `ENROLLED_IN`), enable `eager_load` in your environment's config file.
+        * If you are using the same relationship type in multiple ActiveRel models, you are reliant on `_classname`. Use the class method `set_classname` in your model, continue using `type`, and enable `eager_load`, as with the other solutions.
+
+        This behavior is all described in detail at [this page](https://github.com/neo4jrb/neo4j/wiki/Neo4j.rb-v4-Introduction#matching-neo4j-objects-to-classes). Please open an issue or reach out to one of us directly if you need help.
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

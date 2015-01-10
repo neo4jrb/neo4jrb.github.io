@@ -31,6 +31,10 @@ tags: news, releases, milestones, changelog
 
         We are running all of our tests against 2.2.0-M01 right now and will move to 2.2.0 when it is released. You can see our CI at [https://travis-ci.org/neo4jrb/neo4j](https://travis-ci.org/neo4jrb/neo4j), where you'll notice we're testing against Ruby 2.2.0, 1.9.3, and JRuby 1.7.16.
 
+        #### SPEED
+
+        Almost everything you do will be faster. Our benchmarks show performance improvements of more than 2x on most repeat queries. This is mostly thanks to changes in Neo4j-core. Read about it at [here](http://neo4jrb.io/blog/2014/12/26/performance_gains_in_4-0.html). This will be very noticeable in environments where your database and web servers are on two different machines.
+
         #### "_classname" properties are no longer added (Neo4j 2.1.5+)
 
         `_classname`, one of our least favorite (but totally necessary) features of 3.x, is not needed anymore as long as you are running Neo4j 2.1.5 or greater, which you should be. See [http://neo4jrb.io/blog/2014/12/23/the_road_to_4-0.html](http://neo4jrb.io/blog/2014/12/23/the_road_to_4-0.html) for more detail than you'll ever want. [This wiki page](https://github.com/neo4jrb/neo4j/wiki/Neo4j.rb-v4-Introduction) outlines the implications of this.
@@ -54,6 +58,10 @@ tags: news, releases, milestones, changelog
         #### Scopes are more powerful
 
         You can now chain scopes and methods to QueryProxy objects. If `top_students` is defined as a scope or method in `Lesson` that finds students with certain grades, `Student.all.where(age: 18).lessons.top_students` will now work. See [this spec](https://github.com/neo4jrb/neo4j/blob/master/spec/e2e/scope_spec.rb) for examples, with more documentation to come.
+
+        #### Our code is cleaner and more consistent
+
+        Brian spent a few days attacking both gems with Rubocop and his keen eye for detail. Rubocop compliance is now a required part of our test process. We have some strong feelings about this; see [Brian's post on the topic](http://neo4jrb.io/blog/2014/12/29/stay-out-of-trouble.html).
 
         #### New association option: `dependent`
 

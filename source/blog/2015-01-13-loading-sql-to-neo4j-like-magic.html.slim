@@ -1,0 +1,26 @@
+---
+title:  Loading Sql To Neo4j Like Magic
+date: 2015-01-13 09:59:56 UTC
+poster: Brian Underwood
+summary: A new gem to make moving data to neo4j really easy
+tags:
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        When using neo4j for the first time, most people want to import data from another database to start playing around. There are a lot of options including LOAD CSV, batch-import, and even using Groovy. All of these require some setup and configuration. I wanted to create the simplest SQL to Neo4j import process possible.
+
+        Enter [neo4apis-activerecord](https://github.com/neo4jrb/neo4apis-activerecord)!
+
+        [Read More on Brian's Blog](http://blog.brian-underwood.codes/sql/neo4j/neo4apis/activerecord/announcements/2015/01/08/loading_sql_to_neo4j_like_magic/)
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

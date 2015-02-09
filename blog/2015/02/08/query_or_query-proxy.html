@@ -1,0 +1,121 @@
+<!DOCTYPE html><html><head><meta charset="utf-8" /><!--Always force latest IE rendering engine or request Chrome Frame--><meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" /><!--Use title if it's in the page YAML frontmatter--><meta content="width=device-width, initial-scale=1.0;" name="viewport" /><title>Query or QueryProxy?</title><link href="/stylesheets/normalize.css" rel="stylesheet" type="text/css" /><link href="/stylesheets/all.css" rel="stylesheet" type="text/css" /><link href="favicon.png" rel="icon" type="image/png" /></head><body class="page_classes blog blog_2015 blog_2015_02 blog_2015_02_08 blog_2015_02_08_query_or_query-proxy"><header class="navbar navbar-static-top"><div class="container"><div class="navbar-header"><button class="navbar-toggle collapsed" data-target=".bs-navbar-collapse" data-toggle="collapse" type="button"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="/"><img src="/images/logo.png" /></a></div><nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation"><ul class="nav navbar-nav"><li><a href="../../../../#latest-news">News</a></li><li><a href="https://github.com/neo4jrb/neo4j/wiki">Documentation</a></li><li><a href="../../../../#getting-started">Get started</a></li><li><a href="../../../../#getting-involved">Get involved</a></li><li><a href="../../../../#getting-help">Getting Help</a></li></ul></nav></div></header><div class="container" id="main"><div class="row"><div class="col-xs-8" id="content"><div class="panel blog-post"><div class="panel-heading"><h2>Query or QueryProxy?</h2></div><div class="panel-body"><p>One of the most crucial pieces of Neo4j.rb is <code>Neo4j::ActiveNode::Query::QueryProxy</code>, but it may be the area of the gem that is the least spelled out in our documentation. Sure, many of its methods are described and it&#39;s tested extensively, but it and its relationship to <code>Neo4j::Core::Query</code> is often a source of confusion. I think there are a few reasons for this -- a sense of shared responsibilities, similar or often identical methods, and maybe too much inference in the docs -- but whatever the cause(s), I&#39;d like to offer a bit of a primer and some tips.</p>
+
+<p>It gets tricky to explain QueryProxy without getting too technical and I don&#39;t want to do a crappy job of explaining what specs and source accurately describe, so I&#39;m going to try to keep this relatively high-level. For a more technical overview, check out the specs for the classes in their respective Github repos, <a href="https://github.com/neo4jrb/neo4j">neo4jrb/neo4j</a> and <a href="https://github.com/neo4jrb/neo4j-core">neo4jrb/neo4j-core</a>.</p>
+
+<h3>Neo4j::Core::Query</h3>
+
+<p>Core::Query is the Cypher DSL in the <a href="https://github.com/neo4jrb/neo4j-core">Neo4j-core</a> gem. It was built by Brian as part of our 3.0 release and powers almost everything Cypher-related. As a Cypher DSL, it has methods that match almost every function in Cypher: <code>match(s: Student)</code> generates <code>MATCH (s:Student)</code>, <code>where(s: { age: 30 })</code> generates <code>WHERE s.age = 30</code>, and so on. It is chainable, so <code>match(s:Student).where(s: { age: 30 })</code> generates <code>MATCH (s:Student) WHERE s.age = 30</code>.</p>
+
+<p>Core::Query is powerful, complex, and adaptable. Almost every method will accept a string, a symbol, or a hash. It understands the order that functions must be given and will often rearrange the query it generates to ensure proper syntax, but you can use the <code>break</code> method to keep things in the order called. If you only had Neo4j-core, you could still do everything that you do in Neo4j.rb, it would just take a bit longer because you wouldn&#39;t have ActiveNode... but you could still work.</p>
+
+<p>Really, you should check out the <a href="https://github.com/neo4jrb/neo4j-core/wiki/Queries">wiki</a>, <a href="https://github.com/neo4jrb/neo4j-core/blob/master/spec/neo4j-core/unit/query_spec.rb">specs</a> and <a href="http://neo4jrb.io/neo4j-core/doc/Neo4j/Core/Query.html">YARD docs</a>, because they spell everything out.</p>
+
+<h3>Neo4j::ActiveNode::Query::QueryProxy</h3>
+
+<p>QueryProxy, also built by Brian for the 3.0 release, is a class that implements methods to build Core::Query objects and chains. It powers everything in Neo4j.rb from node and relationship creation to methods like <code>first</code> and <code>where</code> to matches using associations. When you call <code>student.lessons &lt;&lt; math</code>, you are using QueryProxy. When you call <code>student.lessons</code>, you are returning a QueryProxy. Same goes for <code>Student.all</code>, <code>Student.find</code>, and so on.</p>
+
+<p>At this point, you might be wondering what the point of QueryProxy is, if it&#39;s just shortcuts to Cypher. Why is it in Neo4j.rb instead of Neo4j-core? The reason is because QueryProxy has a fundamentally different focus: Core::Query is a catch-all, &quot;write-Cypher-with-Ruby&quot; class, but QueryProxy has a model-centric focus and does not aim to be everything for everyone. It understands that it does not need to handle every Cypher query, since that&#39;s why Core::Query exists; instead, it provides convenience methods that leverage ActiveNode models and objects to let you work faster.</p>
+
+<p>We could (and maybe we should?) fill a book about using QueryProxy by itself. Some examples, though...</p>
+
+<pre><code># All students.
+Student.all.to_a
+# In Neo4j::Core::Query, we have to set an identifier. ActiveNode handles it for us.
+Neo4j::Core::Query.new.match(s: Student).pluck(:s)
+
+# All students, but setting the Cypher identifier us `as`
+# `as` can be called on any class or node, but it is not a QueryProxy method, so you cannot use it within a QP chain.
+# It sets an identifier.
+Student.as(:s).all.to_a
+
+# Return all students&#39; lessons
+Student.lessons.to_a
+# In Core::Query, we&#39;d do it ourselves.
+Neo4j::Core::Query.new.match(s: Student, l: Lesson).match(&quot;(s)-[r:ENROLLED_IN]-&gt;(l)&quot;).pluck(:l)
+
+# Return all students who have level 102 lessons
+Student.as(:s).lessons.where(level: 102).pluck(:s)
+# Or...
+Neo4j::Core::Query.new.match(s: Student, l: Lesson)
+  .match(&quot;(s)-[r:ENROLLED_IN]-&gt;(l { level: {level} })&quot;)
+  .params(level: 102)
+  .pluck(:s)
+
+# Match all students, age 14, who have grades of 99 in level 102 lessons taught by Mr Green.
+# Return the lessons.
+Student.where(age: 14).lessons(:l)
+  .where(level: 102).rel_where(grade: 99)
+  .teachers.where(name: &#39;Mr Green&#39;)
+  .pluck(:l)
+# Or...
+Neo4j::Core::Query.new.match(s: Student, l: Lesson, t: Teacher)
+  .where(s: { age: 14 }, l: { level: 102 }, t: { name: &#39;Mr Green&#39;})
+  .match(&quot;(s)-[r:ENROLLED_IN { grade: 99 }]-&gt;(l)&lt;-[r2:TEACHES]-(t)&quot;)
+  .pluck(:l)
+</code></pre>
+
+<p>As you can see, the QueryProxy version is always shorter because it uses information from models to build queries. Behind the scenes, each of those QP chains will eventually be turned into Neo4j::Core::Query objects, but they&#39;ll use your models to figure out labels and relationship types.</p>
+
+<p>But... things aren&#39;t always that simple.</p>
+
+<h3>Between Worlds</h3>
+
+<p>I&#39;ve found that the key to getting the most out of Neo4j.rb is understanding how to move between the two Cypher query classes in different situations. In general, QueryProxy provides a lot of magic and is aware of ActiveNode models, associations, and scopes, but it can be a bit limiting when trying to perform advanced queries; on the other hand, Core::Query is extremely flexible, but its syntax is more explicit and it often defeats the purpose of using models, so it can slow you down.</p>
+
+<p>Thankfully, the gem makes it easy to jump from one class to the other. In the 3.0 release, it was possible to go from QueryProxy to Query and in v4, we added methods that let you create a QueryProxy object from your Core::Query. Now that we have these tools, we can move between worlds as needed! The trick is knowing how to do it and when.</p>
+
+<p>When moving from QueryProxy to Query, the methods are <code>query</code> and <code>query_as</code>. The difference between the two is slight: <code>query</code> will make the change without modifying the query; <code>query_as</code> will set the identifier of the last link in the chain to the symbol given as an argument.</p>
+
+<pre><code># Once `query` is called, our chain is now a Core::Query and we can use its methods...
+student.where(age: 14).lessons(:l).query.with(:l).match(&quot;(l)-[taught_by:TAUGHT_BY]-(t:Teacher)&quot;).pluck(:t)
+
+# `query_as` does the same thing but it will set the identifier for us...
+student.where(age: 14).lessons.query_as(:l).with(:l).match(&quot;(l)-[taught_by:TAUGHT_BY]-(t:Teacher)&quot;).pluck(:t)
+</code></pre>
+
+<p>When coming back to QueryProxy, we can use <code>proxy_as</code>. It will call <code>break</code> on the existing Core::Query to lock its methods in their current order and then create a new MATCH using QP. Its syntax is pretty simple: <code>proxy_as(ModelContext, :identifier, is_optional)</code>, with that third parameter being optional and defaulting to <code>false</code>. You could do something like this:</p>
+
+<pre><code>student.query_as(:s)
+  .match(&quot;(s)-[rel:FRIENDS_WITH*1..3]-&gt;(s2:Student&quot;)
+  .proxy_as(Student, :s2).lessons
+</code></pre>
+
+<p>By calling <code>proxy_as</code>, we end up back in QueryProxy and can call association methods, scopes, and class methods that are defined in the Student class. We reuse our <code>s2</code> identifier because we want to match off of that. Had we passed <code>true</code> as a third argument, it would use <code>OPTIONAL MATCH</code>. Alternatively, we could do <code>proxy_as_optional</code> and skip that third argument entirely. It provides added readability since a random <code>true</code> can sometimes be unclear.</p>
+
+<h3>Get Creative!</h3>
+
+<p>There are lots of reasons to move between the two classes. In addition to the example above, you might find yourself with a long Cypher query that might benefit from the use of <code>with</code> to improve performance. If we go back to one of our earlier examples, we already saw that we could rewrite this:</p>
+
+<pre><code>Student.where(age: 14).lessons(:l).where(level: 102).rel_where(grade: 99).teachers.where(name: &#39;Mr Green&#39;).pluck(:l)
+</code></pre>
+
+<p>...as this:</p>
+
+<pre><code>Neo4j::Core::Query.new.match(s: Student, l: Lesson, t: Teacher).where(s: { age: 14 }, l: { level: 102 }, t: { name: &#39;Mr Green&#39;}).match(&quot;(s)-[r:ENROLLED_IN { grade: 99 }]-&gt;(l)&lt;-[r2:TEACHES]-(t)&quot;).pluck(:l)
+</code></pre>
+
+<p>But is that the best we can do? No, it&#39;s not. According to my Cypher profiler, in my tiny database, that requires 19 total db hits. If we tell Cypher to load the nodes first, then match within them, we only need 14 db hits, so we&#39;ll have a more efficient query. (In practice, cutting 5 db hits makes no real difference in performance, but this number will go up with a larger database.) In Cypher, it could look like this:</p>
+
+<pre><code>MATCH (s:`Student` { age: 14 }), (l:`Lesson` { level: 102 }), (t:`Teacher` { name: &#39;Mr Green&#39; })
+WITH s, l, t
+MATCH (s)-[r:ENROLLED_IN { grade: 99 }]-&gt;(l)&lt;-[r2:TEACHES]-(t)
+RETURN l
+</code></pre>
+
+<p>Using our new knowledge of Core::Query, QueryProxy, and the methods that can be used to move between them, we could write it like this:</p>
+
+<pre><code>Student.query_as(:s).match(l: Lesson, t: Teacher)
+  .where(s: { age: 14 }, l: { level: 102 }, t: { name: &#39;Mr Green&#39; })
+  .with(:s, :l, :t)
+  .proxy_as(Student, :s).lessons(:l).teachers(:t)
+  .pluck(:l)
+</code></pre>
+
+<p>Of course, the question to ask here is whether the added complexity of the query is worth the performance gained. I can&#39;t answer that for you, but I can tell you that knowing how and when to optimize can make the difference between an app that performs well and doesn&#39;t. We always strive to make Query and QueryProxy generate the best possible Cypher, but it&#39;s good to know that you can step in and do things yourself when you have the need.</p>
+</div><small>Posted 2015/02/08 by Chris Grigg<br />Tagged with <a href="/blog/tags/blogs.html">blogs</a>, <a href="/blog/tags/queryproxy.html">queryproxy</a>, <a href="/blog/tags/tips.html">tips</a></small></div></div><div class="col-sm-1"></div><div class="col-sm-3" id="sidebar"><div class="panel"><div class="panel-body"><p class="git-stats build-info"></p><p class="latest-release build-info"></p><p class="git-star build-info"><iframe allowtransparency="true" frameborder="0" height="20" scrolling="0" src="http://ghbtns.com/github-btn.html?user=neo4jrb&repo=neo4j&type=watch&count=true&size=small" width="110"></iframe></p><p><a href="https://travis-ci.org/neo4jrb/neo4j"><img src="https://travis-ci.org/neo4jrb/neo4j.svg?branch=master" /></a></p><p><a href="https://coveralls.io/r/neo4jrb/neo4j?branch=master"><img src="https://coveralls.io/repos/neo4jrb/neo4j/badge.png?branch=master" /></a></p><a href="https://codeclimate.com/github/neo4jrb/neo4j"><img src="https://codeclimate.com/github/neo4jrb/neo4j/badges/gpa.svg" /></a></div></div><div class="panel"><div class="panel-header"><h3>Primary maintainers</h3></div><div class="panel-body"><div class="maintainer"><h4>Chris Grigg</h4><div class="media"><div class="media-left"><img src="https://avatars.githubusercontent.com/subvertallchris" /></div><div class="media-body"><div><i class="fa fa-external-link"></i> <a href="http://blog.subvertallmedia.com/">Blog</a></div><div><i class="fa fa-github"></i> <a href="https://github.com/subvertallchris/">subvertallchris</a></div><div><i class="fa fa-twitter"></i> <a href="https://twitter.com/subvertallmedia">subvertallmedia</a></div></div></div></div><div class="maintainer"><h4>Brian Underwood</h4><div class="media"><div class="media-left"><img src="https://avatars.githubusercontent.com/cheerfulstoic" /></div><div class="media-body"><div><i class="fa fa-external-link"></i> <a href="http://blog.brian-underwood.codes/">Blog</a></div><div><i class="fa fa-github"></i> <a href="https://github.com/cheerfulstoic/">cheerfulstoic</a></div><div><i class="fa fa-twitter"></i> <a href="https://twitter.com/cheerfulstoic">cheerfulstoic</a></div></div></div></div></div><div class="panel-header"><h3>Original Creator</h3></div><div class="panel-body"><div class="maintainer"><h4>Andreas Ronge</h4><div class="media"><div class="media-left"><img src="https://avatars.githubusercontent.com/andreasronge" /></div><div class="media-body"><div><i class="fa fa-external-link"></i> <a href="http://www.jayway.com/author/andreasronge/">Blog</a></div><div><i class="fa fa-github"></i> <a href="https://github.com/andreasronge">andreasronge</a></div><div><i class="fa fa-twitter"></i> <a href="https://twitter.com/ronge">ronge</a></div></div></div></div></div></div><div class="panel"><div class="panel-body"><script data-gratipay-username="cheerfulstoic" src="//grtp.co/v1.js"></script></div></div></div></div></div><a href="https://github.com/neo4jrb/neo4j" id="github"><img alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" style="position: absolute; top: 0; right: 0; border: 0;" /></a><script src="/javascripts/all.js" type="text/javascript"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-57970757-1', 'auto');
+ga('send', 'pageview');</script></body></html>

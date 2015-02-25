@@ -1,0 +1,140 @@
+---
+title:  Query or QueryProxy?
+date: 2015-02-08 00:19:12 UTC
+poster: Chris Grigg
+summary: We often get questions about the Query and QueryProxy classes. Chris sheds a little light on the issue.
+tags: blogs, queryproxy, tips
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        One of the most crucial pieces of Neo4j.rb is `Neo4j::ActiveNode::Query::QueryProxy`, but it may be the area of the gem that is the least spelled out in our documentation. Sure, many of its methods are described and it's tested extensively, but it and its relationship to `Neo4j::Core::Query` is often a source of confusion. I think there are a few reasons for this -- a sense of shared responsibilities, similar or often identical methods, and maybe too much inference in the docs -- but whatever the cause(s), I'd like to offer a bit of a primer and some tips.
+
+        It gets tricky to explain QueryProxy without getting too technical and I don't want to do a crappy job of explaining what specs and source accurately describe, so I'm going to try to keep this relatively high-level. For a more technical overview, check out the specs for the classes in their respective Github repos, [neo4jrb/neo4j](https://github.com/neo4jrb/neo4j) and [neo4jrb/neo4j-core](https://github.com/neo4jrb/neo4j-core).
+
+        ### Neo4j::Core::Query
+
+        Core::Query is the Cypher DSL in the [Neo4j-core](https://github.com/neo4jrb/neo4j-core) gem. It was built by Brian as part of our 3.0 release and powers almost everything Cypher-related. As a Cypher DSL, it has methods that match almost every function in Cypher: `match(s: Student)` generates `MATCH (s:Student)`, `where(s: { age: 30 })` generates `WHERE s.age = 30`, and so on. It is chainable, so `match(s:Student).where(s: { age: 30 })` generates `MATCH (s:Student) WHERE s.age = 30`.
+
+        Core::Query is powerful, complex, and adaptable. Almost every method will accept a string, a symbol, or a hash. It understands the order that functions must be given and will often rearrange the query it generates to ensure proper syntax, but you can use the `break` method to keep things in the order called. If you only had Neo4j-core, you could still do everything that you do in Neo4j.rb, it would just take a bit longer because you wouldn't have ActiveNode... but you could still work.
+
+        Really, you should check out the [wiki](https://github.com/neo4jrb/neo4j-core/wiki/Queries), [specs](https://github.com/neo4jrb/neo4j-core/blob/master/spec/neo4j-core/unit/query_spec.rb) and [YARD docs](http://neo4jrb.io/neo4j-core/doc/Neo4j/Core/Query.html), because they spell everything out.
+
+        ### Neo4j::ActiveNode::Query::QueryProxy
+
+        QueryProxy, also built by Brian for the 3.0 release, is a class that implements methods to build Core::Query objects and chains. It powers everything in Neo4j.rb from node and relationship creation to methods like `first` and `where` to matches using associations. When you call `student.lessons << math`, you are using QueryProxy. When you call `student.lessons`, you are returning a QueryProxy. Same goes for `Student.all`, `Student.find`, and so on.
+
+        At this point, you might be wondering what the point of QueryProxy is, if it's just shortcuts to Cypher. Why is it in Neo4j.rb instead of Neo4j-core? The reason is because QueryProxy has a fundamentally different focus: Core::Query is a catch-all, "write-Cypher-with-Ruby" class, but QueryProxy has a model-centric focus and does not aim to be everything for everyone. It understands that it does not need to handle every Cypher query, since that's why Core::Query exists; instead, it provides convenience methods that leverage ActiveNode models and objects to let you work faster.
+
+        We could (and maybe we should?) fill a book about using QueryProxy by itself. Some examples, though...
+
+        ```
+        # All students.
+        Student.all.to_a
+        # In Neo4j::Core::Query, we have to set an identifier. ActiveNode handles it for us.
+        Neo4j::Core::Query.new.match(s: Student).pluck(:s)
+
+        # All students, but setting the Cypher identifier us `as`
+        # `as` can be called on any class or node, but it is not a QueryProxy method, so you cannot use it within a QP chain.
+        # It sets an identifier.
+        Student.as(:s).all.to_a
+
+        # Return all students' lessons
+        Student.lessons.to_a
+        # In Core::Query, we'd do it ourselves.
+        Neo4j::Core::Query.new.match(s: Student, l: Lesson).match("(s)-[r:ENROLLED_IN]->(l)").pluck(:l)
+
+        # Return all students who have level 102 lessons
+        Student.as(:s).lessons.where(level: 102).pluck(:s)
+        # Or...
+        Neo4j::Core::Query.new.match(s: Student, l: Lesson)
+          .match("(s)-[r:ENROLLED_IN]->(l { level: {level} })")
+          .params(level: 102)
+          .pluck(:s)
+
+        # Match all students, age 14, who have grades of 99 in level 102 lessons taught by Mr Green.
+        # Return the lessons.
+        Student.where(age: 14).lessons(:l)
+          .where(level: 102).rel_where(grade: 99)
+          .teachers.where(name: 'Mr Green')
+          .pluck(:l)
+        # Or...
+        Neo4j::Core::Query.new.match(s: Student, l: Lesson, t: Teacher)
+          .where(s: { age: 14 }, l: { level: 102 }, t: { name: 'Mr Green'})
+          .match("(s)-[r:ENROLLED_IN { grade: 99 }]->(l)<-[r2:TEACHES]-(t)")
+          .pluck(:l)
+        ```
+
+        As you can see, the QueryProxy version is always shorter because it uses information from models to build queries. Behind the scenes, each of those QP chains will eventually be turned into Neo4j::Core::Query objects, but they'll use your models to figure out labels and relationship types.
+
+        But... things aren't always that simple.
+
+        ### Between Worlds
+
+        I've found that the key to getting the most out of Neo4j.rb is understanding how to move between the two Cypher query classes in different situations. In general, QueryProxy provides a lot of magic and is aware of ActiveNode models, associations, and scopes, but it can be a bit limiting when trying to perform advanced queries; on the other hand, Core::Query is extremely flexible, but its syntax is more explicit and it often defeats the purpose of using models, so it can slow you down.
+
+        Thankfully, the gem makes it easy to jump from one class to the other. In the 3.0 release, it was possible to go from QueryProxy to Query and in v4, we added methods that let you create a QueryProxy object from your Core::Query. Now that we have these tools, we can move between worlds as needed! The trick is knowing how to do it and when.
+
+        When moving from QueryProxy to Query, the methods are `query` and `query_as`. The difference between the two is slight: `query` will make the change without modifying the query; `query_as` will set the identifier of the last link in the chain to the symbol given as an argument.
+
+        ```
+        # Once `query` is called, our chain is now a Core::Query and we can use its methods...
+        student.where(age: 14).lessons(:l).query.with(:l).match("(l)-[taught_by:TAUGHT_BY]-(t:Teacher)").pluck(:t)
+
+        # `query_as` does the same thing but it will set the identifier for us...
+        student.where(age: 14).lessons.query_as(:l).with(:l).match("(l)-[taught_by:TAUGHT_BY]-(t:Teacher)").pluck(:t)
+        ```
+
+        When coming back to QueryProxy, we can use `proxy_as`. It will call `break` on the existing Core::Query to lock its methods in their current order and then create a new MATCH using QP. Its syntax is pretty simple: `proxy_as(ModelContext, :identifier, is_optional)`, with that third parameter being optional and defaulting to `false`. You could do something like this:
+
+        ```
+        student.query_as(:s)
+          .match("(s)-[rel:FRIENDS_WITH*1..3]->(s2:Student")
+          .proxy_as(Student, :s2).lessons
+        ```
+        By calling `proxy_as`, we end up back in QueryProxy and can call association methods, scopes, and class methods that are defined in the Student class. We reuse our `s2` identifier because we want to match off of that. Had we passed `true` as a third argument, it would use `OPTIONAL MATCH`. Alternatively, we could do `proxy_as_optional` and skip that third argument entirely. It provides added readability since a random `true` can sometimes be unclear.
+
+        ### Get Creative!
+
+        There are lots of reasons to move between the two classes. In addition to the example above, you might find yourself with a long Cypher query that might benefit from the use of `with` to improve performance. If we go back to one of our earlier examples, we already saw that we could rewrite this:
+
+        ````
+        Student.where(age: 14).lessons(:l).where(level: 102).rel_where(grade: 99).teachers.where(name: 'Mr Green').pluck(:l)
+        ```
+
+        ...as this:
+
+        ```
+        Neo4j::Core::Query.new.match(s: Student, l: Lesson, t: Teacher).where(s: { age: 14 }, l: { level: 102 }, t: { name: 'Mr Green'}).match("(s)-[r:ENROLLED_IN { grade: 99 }]->(l)<-[r2:TEACHES]-(t)").pluck(:l)
+        ```
+
+        But is that the best we can do? No, it's not. According to my Cypher profiler, in my tiny database, that requires 19 total db hits. If we tell Cypher to load the nodes first, then match within them, we only need 14 db hits, so we'll have a more efficient query. (In practice, cutting 5 db hits makes no real difference in performance, but this number will go up with a larger database.) In Cypher, it could look like this:
+
+        ```
+        MATCH (s:`Student` { age: 14 }), (l:`Lesson` { level: 102 }), (t:`Teacher` { name: 'Mr Green' })
+        WITH s, l, t
+        MATCH (s)-[r:ENROLLED_IN { grade: 99 }]->(l)<-[r2:TEACHES]-(t)
+        RETURN l
+        ```
+        Using our new knowledge of Core::Query, QueryProxy, and the methods that can be used to move between them, we could write it like this:
+
+        ```
+        Student.query_as(:s).match(l: Lesson, t: Teacher)
+          .where(s: { age: 14 }, l: { level: 102 }, t: { name: 'Mr Green' })
+          .with(:s, :l, :t)
+          .proxy_as(Student, :s).lessons(:l).teachers(:t)
+          .pluck(:l)
+        ```
+
+        Of course, the question to ask here is whether the added complexity of the query is worth the performance gained. I can't answer that for you, but I can tell you that knowing how and when to optimize can make the difference between an app that performs well and doesn't. We always strive to make Query and QueryProxy generate the best possible Cypher, but it's good to know that you can step in and do things yourself when you have the need.
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

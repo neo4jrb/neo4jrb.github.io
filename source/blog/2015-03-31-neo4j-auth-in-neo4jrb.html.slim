@@ -1,0 +1,58 @@
+---
+title:  Neo4j Auth in Neo4j.rb
+date: 2015-03-31 00:19:12 UTC
+poster: Brian Underwood
+summary: We often get questions about the Query and QueryProxy classes. Chris sheds a little light on the issue.
+tags: auth
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+    
+        Neo4j 2.2.0 [came out recently](http://neo4j.com/whats-new-in-neo4j-2-2/) and, of course, we've very excited!  One of the biggest changes you should know about if you're trying to use Neo4j.rb with Neo4j 2.2.0 is that authentication is required by default.  It's implemented using HTTP Basic Auth and we've updated the latest version of the `neo4j-core` gem (which the `neo4j` gem depends on) to support it.
+
+        ## Using sessions
+
+        If you're creating `Session` objects directly from the `neo4j-core` gem, you just need to add some configuration options:
+
+        ```
+          session = Neo4j::Session.open(:server_db,
+                                        'http://localhost:7474',
+                                        basic_auth: {username: 'neo4j', password: 'reel_secure'})
+        ```
+
+        ## In Rails
+
+        If you're using Rails it's just as easy.  You only need to configure it in one of your environment files (such as `config/development.rb` or `config/production.rb`) or the `config/application.rb` file:
+
+        ```
+          config.neo4j.session_type = :server_db 
+          config.neo4j.session_path = 'http://localhost:7474'
+          config.neo4j.session_options = { basic_auth: { username: 'foo', password: 'bar'} } 
+        ```
+
+        ## Disabling authentication
+
+        If you're in a hurry or just don't want to bother with authentication in your development or test environments, you can disable configure the `dbms.security.auth_enabled` variable in `conf/neo4j-server.properties`:
+
+        ```
+          dbms.security.auth_enabled=false
+        ```
+
+        If you've installed your Neo4j database via the Neo4j.rb rake tasks, this is located in `db/neo4j/development/conf/neo4j-server.properties`
+
+
+        Happy Graphing!
+
+
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

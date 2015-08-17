@@ -100,7 +100,6 @@ title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
 
         iframe width="560" height="315" src="https://www.youtube.com/embed/bDjbqRL9HcM" frameborder="0" allowfullscreen
 
-
         h4 Modeling
         p
           markdown:
@@ -160,6 +159,17 @@ title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
             At each step in the chain a query object is returned which is also `Enumerable`.  See the [documentation](https://github.com/neo4jrb/neo4j-core/wiki/Queries) for more info.
 
             Also note that with the query chaining there is no need to use params (which are important for efficient neo4j queries).  They will be used in the background in this case.
+
+        h4 install in Ruby on Rails
+
+        In your `config/application.rb`
+
+        ```ruby
+          config.neo4j.session_type = :server_db
+          config.neo4j.session_path = ENV['NEO4J_URL'] || 'http://localhost:7475'
+        ```
+
+        The url format is `http://user:password@localhost:7475`
 
     #getting-involved.panel
       .panel-heading

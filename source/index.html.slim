@@ -11,7 +11,11 @@ title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
       .panel-body
         p
           markdown:
-            Neo4j.rb (the [neo4j](https://github.com/neo4jrb/neo4j) and [neo4j-core](https://github.com/neo4jrb/neo4j-core) gems) is a [Ruby](https://www.ruby-lang.org/en/) Object-Graph-Mapper (OGM) for the [Neo4j](http://neo4j.com) graph database. It tries to follow API conventions established by [ActiveRecord](http://guides.rubyonrails.org/active_record_basics.html) and familiar to most Ruby developers but with a Neo4j flavor.
+            The Neo4j.rb project is made up of the follow [Ruby](https://www.ruby-lang.org/en/) gems:
+
+             * [neo4j](https://github.com/neo4jrb/neo4j) A Object-Graph-Mapper (OGM) for the [Neo4j](http://neo4j.com) graph database. It tries to follow API conventions established by [ActiveRecord](http://guides.rubyonrails.org/active_record_basics.html) and familiar to most Ruby developers but with a Neo4j flavor.
+             * [neo4j-core](https://github.com/neo4jrb/neo4j-core) A low level driver for connecting to Neo4j.  Used by the `neo4j` gem.
+             * [neo4j-rake_tasks](https://github.com/neo4jrb/neo4j-rake_tasks)) A set of rake tasks for installing and managing a Neo4j database within your project.  Used by the `neo4j-core` gem.
 
         dl.dl-horizontal
           dt Ruby

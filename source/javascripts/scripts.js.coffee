@@ -2,7 +2,8 @@ gitStats = () ->
   endpoint = "https://api.github.com/repos/neo4jrb/neo4j/"
   $.getJSON "#{endpoint}commits?per_page=1", (response) ->
     date = new Date(response[0].commit.author.date)
-    $('.git-stats').html "<strong>Last commit:</strong><br />#{date.getFullYear()}/#{date.getMonth() + 1}/#{date.getDate()}"
+    month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    $('.git-stats').html "<strong>Last commit:</strong><br />#{month_names[date.getMonth()]} #{date.getDate()}, #{date.getFullYear()}"
 
   $.getJSON "#{endpoint}tags?per_page=1", (response) ->
     release_date = $.getJSON response[0].commit.url, (commit_response) ->

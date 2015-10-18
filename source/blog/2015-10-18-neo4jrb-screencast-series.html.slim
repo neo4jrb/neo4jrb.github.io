@@ -1,0 +1,39 @@
+---
+title: Neo4j.rb Screencast Series
+date: 2015-08-18 18:16:16 UTC
+poster: Brian Underwood
+summary: Neo4j.rb Screencast Series
+tags: screencasts, news
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        This news comes a bit late, but we wanted all Neo4j.rb users to be aware of a new short screencast series covering how to setup and use the Neo4j.rb gems:
+
+        [Episode 1 - Create a Neo4j Rails Application](https://www.youtube.com/watch?v=n0P0pOP34Mw)
+
+        [Episode 2 - Properties](https://www.youtube.com/watch?v=2pCSQkHkPC8)
+
+        [Episode 3 - Associations](https://www.youtube.com/watch?v=veqIfIqtoNc)
+
+        [Episode 4 - Association chaining](https://www.youtube.com/watch?v=pUAl9ov22j4)
+
+        [Episode 5 - ActiveRel](https://www.youtube.com/watch?v=f7NNGIWZ1pE)
+
+        [Episode 6 - Deeper Querying](https://www.youtube.com/watch?v=UFiWqPdH7io)
+
+        The series aims to be useful for new users, but also to thoroughly cover information to provide tips for existing users of Neo4j.  Let us know what you think!
+
+        Happy Graphing!
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1
+

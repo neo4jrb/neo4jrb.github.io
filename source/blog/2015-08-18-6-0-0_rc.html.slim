@@ -1,0 +1,28 @@
+---
+title:  6.0.0 RC!
+date: 2015-08-18 18:15:16 UTC
+poster: Brian Underwood
+summary: Neo4j.rb 6.0.0 release candidate
+tags: releases, news
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        We've released the 6.0.0.alpha.x series.  Please change your `Gemfiles` to give it a try!
+
+        There are a lot of cover changes, but we had some items which weren't backwards compatible, hence the new major version.  To see the recent changes check out the CHANGELOGs for [neo4j](https://github.com/neo4jrb/neo4j/blob/master/CHANGELOG.md) and [neo4j-core](https://github.com/neo4jrb/neo4j-core/blob/master/CHANGELOG.md).
+
+        Don't be fooled by the `alpha` designation, we aim for stable releases and have a large test suite for the gems!
+
+        As always: see our [README](https://github.com/neo4jrb/neo4j/) for the best ways to get help!
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

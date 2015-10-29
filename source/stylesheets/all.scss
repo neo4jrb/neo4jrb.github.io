@@ -98,6 +98,10 @@ code {
 	z-index: 1;
 }
 
+.navbar-static-top {
+  z-index: 1;
+}
+
 .panel {
 	background: none;
 	border-radius: 0;
@@ -185,3 +189,11 @@ code {
     }
   }
 }
+
+.gitter-open-chat-button {
+  bottom: auto;
+  top: 0;
+  border-radius: 0 0 0.5em 0.5em;
+  right: 235px;
+}
+

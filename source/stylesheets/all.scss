@@ -195,5 +195,9 @@ code {
   top: 0;
   border-radius: 0 0 0.5em 0.5em;
   right: 235px;
+
+  &.is-collapsed {
+    transform: translateY(-120%);
+  }
 }
 

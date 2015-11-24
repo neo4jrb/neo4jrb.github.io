@@ -1,0 +1,92 @@
+---
+title:  6.0.0's Changes
+date: 2015-11-15 21:45:18 UTC
+poster: Neo4j.rb Team
+summary: A look at some of the significant changes in Neo4j.rb 6.0
+tags:
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        After a long dev process, the release of 6.0 is upon us. As usual, this release includes heavy internal refactoring, but it also includes more than a few changes that you should be aware of before your upgrade. This is not at all an exhaustive list, so please see the changelog [here](https://github.com/neo4jrb/neo4j/blob/master/CHANGELOG.md#600rc1---11-13-2015) if you want a full summary.
+
+        ## Changes
+
+        ### `_classname` has been removed, Neo4j < 2.1.5 is officially unsupported
+
+        **Matters if** you use Neo4j < 2.1.5 or explicitly use the `_classname` property.
+
+        The `_classname` feature was necessary for performance prior to 2.1.5 and may have been considered helpful after that, but we had not been testing against this version of the database for some time and the related code was not under heavy scrutiny. In the interest of being able to focus on support of modern versions of the database and keep general gem maintenance responsibilities focused on areas that matter most to users, this feature has been completely removed.
+
+        ### Relationships created with `<<` will use `ActiveRel` class if the `rel_class` option is set
+
+        **Matters if** you use `ActiveRel` but do not always use `RelClass.create`.
+
+        This has been on the table for a while but there was some concern that users might prefer the option of bypassing rel classes entirely. We ultimately agreed that _not_ using the rel class when given felt like unexpected behavior.
+
+        ### Errors will be raised if trying to create both an index and constraint on the same property in a model
+
+        **Matters if** you were erroneously doing this.
+
+        In Neo4j, unique constraints provide exact indexes. Because of this, it is both unnecessary and impossible to manually set both. The gem, however, would help you out: if you tried to create an index and it found a constraint, it would drop the constraint, or vice versa. This could result in locks or hangs within an app when new sessions were started. As of 6.0, you will encounter an error if you try to do this.
+
+        If you run into this error, the solution is simple: remove the option to add an index in your model.
+
+        ### Settings that result in Cypher using `CREATE UNIQUE` for rel creation now accept arguments
+
+        **Matters if** you are using `creates_unique` in `ActiveRel` or `unique: true` with an association.
+
+        Up until now, both `ActiveRel` and `QueryProxy#<<`'s `CREATE UNIQUE` option was very basic: any properties present in the rel creation would have an impact on whether a new relationship was actually created. We agreed that this did not reflect most users' expectations, which were that the only actors in the determination of whether a relationship would be created would be the nodes, rel type, and rel direction. With 6.0, we introduce options and a change to the default.
+
+        Under the new default setting, properties will be ignored when creating the relationship. Regardless of how many properties are set or their values, you will not create a new rel if you have the same nodes, rel type, and direction involved.
+        If your option is `:all`, all properties will be made part of the `CREATE UNIQUE` Cypher query, so if there is not an exact match, you will create a new relationship.
+        If your option is `{ on: [keys] }`, the properties corresponding with the list given as `keys` will be evaluated as part of the `CREATE UNIQUE` query, the rest will be set after the relationship is created.
+
+        These rules are true for both `ActiveRel#creates_unique` and the `Association` option.  You can see the PR and discussion about this [here](https://github.com/neo4jrb/neo4j/pull/1038) for more details.
+
+        ## Additions
+
+        ### Support for `config/neo4j.yml`
+
+        Many of us find YAML configs easier to work with, particularly in different environments. See [the docs](https://github.com/neo4jrb/neo4j/blob/d11b99c3902504a0168b042d0e72a86ce0ddf139/docs/Setup.rst#rails-configuration) for an example.
+
+        ### Three-argument syntax for `ActiveRel.new` and `create`
+
+        Many of us found the process of inserting `from_node` and `to_node` keys into the mass-assignment hash tedious when creating `ActiveRel` instances, so we have a new, alternative syntax: `MyRelClass.new(from_node, to_node, properties)`. The original signature is still valid, so there is nothing to change if you are happy with the classic way of doing things.
+
+        ### `ActiveRel` supports unpersisted nodes
+
+        A typical rel-creation pattern looks like this:
+
+        ```
+        Neo4j::Transaction.run do
+            from_node = NodeClass1.create
+            to_node   = NodeClass2.create
+            rel       = MyRelClass.create(from_node, to_node, properties)
+        end
+        ```
+
+        That's three queries plus the transaction's close. In 6.0.0, you can do this:
+
+        ```
+        from_node = NodeClass1.new
+        to_node   = NodeClass2.new
+        rel       = MyRelClass.create(from_node, to_node, properties)
+        ```
+
+        It will perform all callbacks and validations, add default properties and UUIDs, and create both nodes and the rel in a single Cypher statement. It's about 17% faster than handling it in three queries and it might simplify your workflow quite a bit.
+
+        -------------
+
+        Those are the big ones but there are bug fixes, new classes for performing schema operations and building Cypher `CREATE` or `MATCH` statements, and general refactoring all over the place. Neo4j.rb 6.0.0 closes out a busy year for the project with our best release yet and we're looking forward to what 2016 brings.
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1

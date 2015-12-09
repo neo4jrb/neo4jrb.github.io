@@ -1,0 +1,23 @@
+---
+title:  Brian Underwood interviewed on Ruby Rogues
+date: 2015-12-04 00:00:01 UTC
+poster: Brian Underwood
+summary: Brian Underwood interviewed on Ruby Rogues
+tags: interview, news
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+        Brian Underwood, one of the maintainers of the Neo4j.rb project, recently gave an interview with the Ruby Rogues.  See [episode #236](https://devchat.tv/ruby-rogues/236-rr-neo4j-with-brian-underwood)
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1
+

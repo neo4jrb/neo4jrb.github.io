@@ -24,8 +24,8 @@
     property :name
     property :age, type: Integer
 
-    has_many :out, :friends, type: :friends_with, class_name: &#39;User&#39;
-    has_one :in,   :github_profile, type: :linked_to  # class_name: &#39;GithubProfile&#39; assumed
+    has_many :out, :friends, type: :friends_with, model_name: &#39;User&#39;
+    has_one :in,   :github_profile, type: :linked_to  # model_name: &#39;GithubProfile&#39; assumed
   end
 </code></pre>
 

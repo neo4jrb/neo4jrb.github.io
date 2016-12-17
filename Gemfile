@@ -1,7 +1,7 @@
 # If you do not have OpenSSL installed, update
 # the following line to use "http://" instead
 source 'https://rubygems.org'
-ruby '2.2.3'
+ruby '2.3.1'
 
 gem "middleman", "~>3.3.7"
 
@@ -24,5 +24,5 @@ gem 'coffee-script'
 gem 'sass'
 gem 'jquery-middleman'
 
-gem 'therubyracer'
+# gem 'therubyracer'
 gem 'oj'

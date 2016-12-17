@@ -1,0 +1,60 @@
+---
+title: Latest major releases of Neo4j.rb gems
+date: 2016-12-16 00:00:01 UTC
+poster: Brian Underwood
+summary: Latest major releases of Neo4j.rb gems
+tags: news
+---
+
+#content.col-xs-8
+  .panel.blog-post
+    .panel-heading
+      h2 #{current_article.title}
+    .panel-body
+      markdown:
+
+        We are extremely excited to announce the latest release of the Neo4j.rb Ruby gems (version 8.0 of `neo4j` and 7.0 of `neo4j-core`).  With over a year since the last major releases, the new Ruby gems bring a number of big changes.  For these versions in particular we had a lot of help from many members of our community with 216 and 445 commits for the `neo4j-core` and `neo4j` gems respectively.  We'd like to thank GitHub users: `ProGM`, `brucek`, `klobuczek`, `jacob-ewald`, `knapo`, and `isaacsanders` for their commits as well as all of the users who submitted issues and asked questions in our [Gitter room](gitter.im/neo4jrb/neo4j), in the `#neo4j-ruby` channel on the [Neo4j Slack group](https://neo4j.com/blog/public-neo4j-users-slack-group/), and on StackOverflow.
+
+        # The `neo4j-core` gem
+
+        The biggest and most important change to the `neo4j-core` gem is the addition of support for the binary Bolt protocol introduced in Neo4j 3.0 (older versions of the gems still supported Neo4j 3.0+ via HTTP and embedded modes).
+
+        The Neo4j.rb project was originally created as jRuby-only interface to use Neo4j embedded in the Ruby process.  When Neo4j introduced it's HTTP JSON APIs, support for HTTP was added in version 3.0 of both gems.  With the addition of the bolt protocol, we decided that rather than bolting (get it?) on support that we would rebuild the `neo4j-core` APIs to create a cleaner, adaptor-based interface for our users.  The old API still is available with support for HTTP and embedded modes, but all users are encouraged to adopt the new API.
+
+        In the new API, there is no longer an idea of a "current" session (though there is now such a concept in the `neo4j` gem for `ActiveNode` and `ActiveRel`).  Because of this users of `neo4j-core` must retain a reference to the session themselves and must create a new session for each thread if using more than one thread.
+
+        Lastly, the new API supports the concept of making more than one query at once, which can allow for batch queries in one http request.
+
+        For more details on interface changes, please see our [upgrade guide](http://neo4jrb.readthedocs.io/en/8.0.x/UpgradeGuide.html)
+
+        For more details on all changes, please see the `neo4j-core` [CHANGELOG](https://github.com/neo4jrb/neo4j-core/blob/master/CHANGELOG.md)
+
+        # The `neo4j` gem
+
+        Of course the 8.0 version of the `neo4j` gem has been heavily modified to use the new API from `neo4j-core` 7.0 under the covers.  Users of the `neo4j` gem won't need to change much.  Some highlights:
+
+         * The `server_db` mode has been removed and you must specify either `http` or `bolt` instead
+         * When configuring Neo4j in Rails, the `session_type`, `session_url`, `session_path`, and `session_options` have been removed.  This can be fixed by simply replacing the `_` with a `.` (i.e. `session.type`)
+         * Outside of Rails the `Neo4j::ActiveBase.current_session=` and `Neo4j::ActiveBase.on_establish_session` methods can be used to setup sessions for `ActiveNode` / `ActiveRel`
+         * Magic creation of indexes and constraints defined in `ActiveNode` models is no longer available.  It is suggested that users use our new migrations functionality (helpful errors are raised, but also see [this section](http://neo4jrb.readthedocs.io/en/8.0.x/UpgradeGuide.html#indexes-and-constraints) of our upgrade guide for details).
+
+        Again, for more details, please see our [upgrade guide](http://neo4jrb.readthedocs.io/en/8.0.x/UpgradeGuide.html)
+
+        There are many more features to talk about with version 8.0 of the `neo4j` gem.  Some highlights:
+
+         * Official Migrations support based off of `ActiveRecord`'s implementation (a huge thanks to ProGM for building this almost entirely single-handedly.  See our [migrations documentation](http://neo4jrb.readthedocs.io/en/8.0.x/Migrations.html))
+         * Support for undeclared properties (see [PR #1294](https://github.com/neo4jrb/neo4j/pull/1294) for details.  Thanks to `klobuczek`)
+         * Support for using Neo4j internal IDs for `ActiveNode`'s' `id_property` (to be used with care since Neo4j IDs can be recycled.  Thanks to `klobuczek`)
+
+        For more details on the many changes changes to the `neo4j` gem, please see our [CHANGELOG](https://github.com/neo4jrb/neo4j/blob/master/CHANGELOG.md)
+
+
+
+
+    small
+      | Posted #{current_article.date.strftime("%Y/%m/%d")} by #{current_page.data.poster}<br />
+      - unless current_article.tags.empty?
+        | Tagged with #{current_article.tags.map { |tag| link_to tag, "/blog/tags/#{tag.tr(' ', '-')}.html"}.join(', ')}
+
+.col-sm-1
+

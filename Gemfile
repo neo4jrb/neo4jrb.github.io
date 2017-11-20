@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 ruby '2.3.1'
 
-gem "middleman", "~>3.3.7"
+gem "middleman", "~> 3.3.12"
 
 gem 'middleman-gh-pages', github: 'neo4jrb/middleman-gh-pages', branch: 'gh-user-page'
 gem 'middleman-blog'

@@ -20,9 +20,9 @@ title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
           markdown:
             The Neo4j.rb project is made up of the follow [Ruby](https://www.ruby-lang.org/en/) gems:
 
-             * [neo4j](https://github.com/neo4jrb/neo4j) A Object-Graph-Mapper (OGM) for the [Neo4j](http://neo4j.com) graph database. It tries to follow API conventions established by [ActiveRecord](http://guides.rubyonrails.org/active_record_basics.html) and familiar to most Ruby developers but with a Neo4j flavor.
-             * [neo4j-core](https://github.com/neo4jrb/neo4j-core) A low level driver for connecting to Neo4j.  Used by the `neo4j` gem.
-             * [neo4j-rake_tasks](https://github.com/neo4jrb/neo4j-rake_tasks)) A set of rake tasks for installing and managing a Neo4j database within your project.  Used by the `neo4j-core` gem.
+             * [activegraph](https://github.com/neo4jrb/activegraph) A Object-Graph-Mapper (OGM) for the [Neo4j](http://neo4j.com) graph database. It tries to follow API conventions established by [ActiveRecord](http://guides.rubyonrails.org/active_record_basics.html) and familiar to most Ruby developers but with a Neo4j flavor.
+             * [neo4j-ruby-driver](https://github.com/neo4jrb/neo4j-ruby-driver) A low level driver for connecting to Neo4j.  Used by the `activegraph` gem.
+             * [neo4j-rake_tasks](https://github.com/neo4jrb/neo4j-rake_tasks)) A set of rake tasks for installing and managing a Neo4j database within your project.
 
         dl.dl-horizontal
           dt Ruby
@@ -63,8 +63,8 @@ title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
         p
           h4 Requirements
           ul
-            li Ruby 2.0.0+ (tested in MRI and JRuby, MRI 2.2.1+ recommended)
-            li Neo4j 2.1.5+ (version 4.0+ of the gem is required to use neo4j 2.2+)
+            li Ruby 2.5+ (tested in MRI and JRuby)
+            li Neo4j 3.4+
 
     #latest-news.panel
       .panel-heading
@@ -113,7 +113,7 @@ title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
 
         h4 Ruby Rogues interview
 
-        p Brian Underwood, one of the maintainers of the Neo4j.rb project, recently gave an interview with the Ruby Rogues.  See <a href="https://devchat.tv/ruby-rogues/236-rr-neo4j-with-brian-underwood">episode #236</a>.
+        p Brian Underwood, one of the former maintainers of the Neo4j.rb project, gave an interview with the Ruby Rogues.  See <a href="https://devchat.tv/ruby-rogues/236-rr-neo4j-with-brian-underwood">episode #236</a>.
 
         h4 Modeling
         p
@@ -121,14 +121,15 @@ title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
             In your `Gemfile`
 
             ```ruby
-              gem 'neo4j'
+            gem 'activegraph'
+            gem 'neo4j-ruby-driver'
             ```
 
             A sample ActiveNode model
 
             ```ruby
              class User
-                include Neo4j::ActiveNode
+                include ActiveGraph::Node
 
                 property :name
                 property :age, type: Integer
@@ -153,22 +154,22 @@ title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
         h4 Simple queries
         p
           markdown:
-            If you just want to execute some raw cypher queries you only need the `neo4j-core` gem.
+            If you just want to execute some raw cypher queries you can do the following.
 
             ```ruby
-              neo4j_session = Neo4j::Session.open(:server_db, ENV['NEO4J_DB_URL'])
+              ActiveGraph::Base.driver =
+                Neo4j::Driver::GraphDatabase.driver('neo4j::/localhost:7687')
 
-              me = neo4j_session.query('MATCH (found:User) WHERE found.name = {aName} RETURN found',
-                                       aName: 'Andreas').first.found
+              me = ActiveGraph::Base.query('MATCH (found:User) WHERE found.name = {aName} RETURN found', aName: 'Andreas').first.found
             ```
 
             There is also a query-building API which allows you to build cypher queries with method chaining:
 
             ```ruby
-              user = neo4j_session.query.match(found: :User).
-                                          where(found: {name: 'Andreas'}).
-                                          return(:user).
-                                          first.found
+              user = ActiveGraph::Base.query.match(found: :User)
+                                            .where(found: {name: 'Andreas'})
+                                            .return(:user)
+                                            .first.found
             ```
 
             At each step in the chain a query object is returned which is also `Enumerable`.  See the [documentation](http://neo4jrb.readthedocs.org/en/stable/Querying.html) for more info.
@@ -181,11 +182,10 @@ title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
           In your `config/application.rb`
 
           ```ruby
-            config.neo4j.session_type = :server_db
-            config.neo4j.session_path = ENV['NEO4J_URL'] || 'http://localhost:7475'
+            config.neo4j.driver.url = ENV['NEO4J_URL'] || 'neo4j://localhost:7687'
+            config.neo4j.driver.username = 'user'
+            config.neo4j.driver.password = 'password'
           ```
-
-          The url format is `http://user:password@localhost:7475`
 
     #getting-involved.panel
       .panel-heading

@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/neo4jrb/middleman-gh-pages.git
+  remote: https://github.com/neo4jrb/middleman-gh-pages.git
   revision: 777064529ae16c49c0a523e7b7729ed49173dfdd
   branch: gh-user-page
   specs:
@@ -106,12 +106,12 @@ GEM
       tilt (~> 1.4.1)
     padrino-support (0.12.8.1)
       activesupport (>= 3.1)
-    rack (1.6.8)
+    rack (1.6.13)
     rack-livereload (0.3.15)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    rake (10.4.2)
+    rake (13.0.6)
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)

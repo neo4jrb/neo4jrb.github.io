@@ -158,7 +158,7 @@ title: 'Neo4j.rb: (ruby)-[:LOVES]-(neo4j)'
 
             ```ruby
               ActiveGraph::Base.driver =
-                Neo4j::Driver::GraphDatabase.driver('neo4j::/localhost:7687')
+                Neo4j::Driver::GraphDatabase.driver('neo4j://localhost:7687')
 
               me = ActiveGraph::Base.query('MATCH (found:User) WHERE found.name = {aName} RETURN found', aName: 'Andreas').first.found
             ```
